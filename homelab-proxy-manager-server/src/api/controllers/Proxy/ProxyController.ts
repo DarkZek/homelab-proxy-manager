@@ -34,6 +34,11 @@ export class ProxyController extends ControllerBase {
     return await this.proxyService.findOneById(id, resourceOptions);
   }
 
+  @Post('/update')
+  public async updateConfig() {
+    return await this.proxyService.updateNginxConfigs();
+  }
+
   @Post()
   @HttpCode(201)
   public async create(@Body() proxy: ProxyCreateRequest) {

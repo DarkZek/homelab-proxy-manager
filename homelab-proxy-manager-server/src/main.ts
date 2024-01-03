@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import { fixModuleAlias } from './utils/fix-module-alias';
 fixModuleAlias(__dirname);
 import { appConfig } from '@base/config/app';
-import { loadEventDispatcher } from '@base/utils/load-event-dispatcher';
 import { useContainer as routingControllersUseContainer, useExpressServer, getMetadataArgsStorage } from 'routing-controllers';
 import { loadHelmet } from '@base/utils/load-helmet';
 import { Container } from 'typedi';
@@ -28,7 +27,6 @@ export class App {
   public async bootstrap() {
     this.useContainers();
     await this.typeOrmCreateConnection();
-    this.registerEvents();
     this.registerCronJobs();
     this.serveStaticFiles();
     this.setupMiddlewares();
@@ -52,10 +50,6 @@ export class App {
     } catch (error) {
       console.log('Caught! Cannot connect to database: ', error);
     }
-  }
-
-  private registerEvents() {
-    return loadEventDispatcher();
   }
 
   private registerCronJobs() {

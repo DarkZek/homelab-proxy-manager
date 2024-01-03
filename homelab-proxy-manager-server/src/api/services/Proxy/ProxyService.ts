@@ -1,12 +1,13 @@
+import { ProxyJobUpdateAllProxies } from '../../queue-jobs/Proxy/NginxConfigQueue';
 import { Service } from 'typedi';
 import { UserNotFoundException } from '@api/exceptions/Users/UserNotFoundException';
-import { EventDispatcher, EventDispatcherInterface } from '@base/decorators/EventDispatcher';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { ProxyRepository } from '../../repositories/Proxy/ProxyRepository';
+import NginxConfigQueue, { ProxyJob } from '../../queue-jobs/Proxy/NginxConfigQueue';
 
 @Service()
 export class ProxyService {
-  constructor(@InjectRepository() private proxyRepository: ProxyRepository, @EventDispatcher() private eventDispatcher: EventDispatcherInterface) {
+  constructor(@InjectRepository() private proxyRepository: ProxyRepository) {
     //
   }
 
@@ -19,9 +20,7 @@ export class ProxyService {
   }
 
   public async create(data: object) {
-    let proxy = await this.proxyRepository.createUser(data);
-
-    this.eventDispatcher.dispatch('onProxyCreate', proxy);
+    let proxy = await this.proxyRepository.createProxy(data);
 
     return proxy;
   }
@@ -29,17 +28,21 @@ export class ProxyService {
   public async updateOneById(id: number, data: object) {
     const proxy = await this.getRequestedProxyOrFail(id);
 
-    this.eventDispatcher.dispatch('onProxyUpdate', proxy);
-
     return await this.proxyRepository.updateUser(proxy, data);
   }
 
   public async deleteOneById(id: number) {
-    const proxy = await this.getRequestedProxyOrFail(id);
-
-    this.eventDispatcher.dispatch('onProxyDelete', proxy);
-
     return await this.proxyRepository.delete(id);
+  }
+
+  public async updateNginxConfigs() {
+
+    const proxies = (await this.getAll()).rows
+
+    return await NginxConfigQueue.dispatch({
+      type: 'UPDATE_ALL_PROXIES',
+      proxies
+    });
   }
 
   private async getRequestedProxyOrFail(id: number, resourceOptions?: object) {

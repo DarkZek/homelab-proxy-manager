@@ -4,7 +4,7 @@ import { Proxy } from '../../models/Proxy/Proxy';
 
 @EntityRepository(Proxy)
 export class ProxyRepository extends RepositoryBase<Proxy> {
-  public async createUser(data: object) {
+  public async createProxy(data: object) {
     let entity = new Proxy();
 
     Object.assign(entity, data);
