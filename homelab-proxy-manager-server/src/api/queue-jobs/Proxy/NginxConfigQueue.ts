@@ -36,7 +36,9 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
 
         // Find the ones that weren't included
         const configsToRemove = configs.filter(config => {
-          return !job.proxies.some(proxy => `${proxy.id}.conf` === config);
+          // Dont remove configs created manually
+          if (!config.endsWith('.automatic.conf')) { return false; } 
+          return !job.proxies.some(proxy => `${proxy.id}.automatic.conf` === config);
         });
 
         // Remove them
@@ -74,6 +76,8 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
         }
+
+        listen 443 ssl;
       }
       server {
           return 301 https://$host$request_uri;
@@ -82,7 +86,7 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
       }
     `
 
-    fs.writeFileSync(`${process.env.NGINX_PATH}/sites-enabled/${config.id}.conf`, nginxConfig);
+    fs.writeFileSync(`${process.env.NGINX_PATH}/sites-enabled/${config.id}.automatic.conf`, nginxConfig);
   }
 }
 

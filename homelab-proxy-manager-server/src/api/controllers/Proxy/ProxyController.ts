@@ -35,6 +35,9 @@ export class ProxyController extends ControllerBase {
   }
 
   @Post('/update')
+  @OpenAPI({
+    description: 'Updates the nginx proxy with the latest configs',
+  })
   public async updateConfig() {
     return await this.proxyService.updateNginxConfigs();
   }
