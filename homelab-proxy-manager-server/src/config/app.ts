@@ -20,7 +20,6 @@ export const appConfig = {
   appPath: getAppPath(),
 
   cronJobsEnabled: toBool(env('ENABLE_CRON_JOBS')),
-  graphqlEnabled: toBool(env('ENABLE_GRAPHQL')),
 
   entitiesDir: env('TYPEORM_ENTITIES_DIR'),
   controllersDir: env('CONTROLLERS_DIR'),

@@ -15,7 +15,6 @@ import express from 'express';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 import * as swaggerUiExpress from 'swagger-ui-express';
-import { buildSchema } from 'type-graphql';
 import bodyParser from 'body-parser';
 
 export class App {
@@ -37,8 +36,7 @@ export class App {
     this.registerRoutingControllers();
     this.registerDefaultHomePage();
     this.setupSwagger();
-    await this.setupGraphQL();
-    // this.register404Page()
+    this.register404Page()
   }
 
   private useContainers() {
@@ -159,27 +157,6 @@ export class App {
 
     // Use Swagger
     this.app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec));
-  }
-
-  private async setupGraphQL() {
-    if (!appConfig.graphqlEnabled) {
-      return false;
-    }
-
-    const graphqlHTTP = require('express-graphql').graphqlHTTP;
-
-    const schema = await buildSchema({
-      resolvers: [__dirname + appConfig.resolversDir],
-      emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
-      container: Container,
-    });
-
-    this.app.use('/graphql', (request: express.Request, response: express.Response) => {
-      graphqlHTTP({
-        schema,
-        graphiql: true,
-      })(request, response);
-    });
   }
 }
 
