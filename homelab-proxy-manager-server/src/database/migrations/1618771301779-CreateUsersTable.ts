@@ -7,7 +7,7 @@ export class CreateUsersTable1618771301779 implements MigrationInterface {
       columns: [
         {
           name: 'id',
-          type: 'bigint',
+          type: 'INTEGER',
           isPrimary: true,
           isGenerated: true,
           generationStrategy: 'increment',
@@ -16,22 +16,10 @@ export class CreateUsersTable1618771301779 implements MigrationInterface {
         { name: 'last_name', type: 'varchar', length: '191' },
         { name: 'email', type: 'varchar', length: '191' },
         { name: 'password', type: 'varchar', length: '191' },
-        { name: 'role_id', type: 'bigint' },
       ],
     });
 
     await queryRunner.createTable(table);
-
-    await queryRunner.createForeignKey(
-      'users',
-      new TableForeignKey({
-        columnNames: ['role_id'],
-        referencedTableName: 'roles',
-        referencedColumnNames: ['id'],
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      }),
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

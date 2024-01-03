@@ -14,8 +14,7 @@ export class LoginService {
 
   public async login(data: LoginRequest) {
     let user = await this.userRepository.findOne({
-      where: { email: data.email },
-      relations: ['role'],
+      where: { email: data.email }
     });
 
     if (!user) {
@@ -30,10 +29,8 @@ export class LoginService {
       {
         userId: user.id,
         email: user.email,
-        role_id: user.role_id,
-        role: user.role.name,
       },
-      { user: { id: user.id, email: user.email, role: user.role.name } },
+      { user: { id: user.id, email: user.email } },
     );
   }
 }
