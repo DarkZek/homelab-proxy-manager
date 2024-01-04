@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { EntityBase } from '@base/infrastructure/abstracts/EntityBase';
-import { ProxyDestinationType } from './ProxyDestinationType';
+import { ProxyDestinationType } from 'homelab-proxy-manager-api-types';
 
 @Entity({ name: 'proxies' })
 export class Proxy extends EntityBase {

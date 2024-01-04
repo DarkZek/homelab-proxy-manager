@@ -17,7 +17,7 @@
             <q-icon
               name="fa-brands fa-docker"
               size="20px"
-              v-if="props.row.destination.type === DestinationType.DOCKER"
+              v-if="props.row.destination.type === ProxyDestinationType.DOCKER"
             ></q-icon>
             <a class="q-pl-sm"
               >{{ props.row.destination.name }}:{{
@@ -48,8 +48,9 @@
 </template>
 
 <script setup lang="ts">
-import { DestinationType } from '../types/DestinationType';
-import { ProxyStatus } from '../types/ProxyStatus';
+import { ProxyStatus } from '@backend/types/ProxyStatus';
+import { ProxyDestinationType } from '@backend/types/ProxyDestinationType';
+import RestApiClient from '../client/RestApiClient';
 
 const columns = [
   { label: 'Domain', name: 'domains' },
@@ -69,4 +70,8 @@ const rows = [
     status: ProxyStatus.INACTIVE,
   },
 ];
+
+RestApiClient.getAllProxies().then((proxies) => {
+  console.log(proxies);
+})
 </script>

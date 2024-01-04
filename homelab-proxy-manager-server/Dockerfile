@@ -1,7 +1,7 @@
 # Common build stage
 FROM node:21-alpine3.18 as common-build-stage
 
-WORKDIR /app
+WORKDIR /app/homelab-proxy-manager-server
 
 EXPOSE 3000
 

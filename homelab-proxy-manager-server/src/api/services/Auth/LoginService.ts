@@ -3,8 +3,8 @@ import { UserRepository } from '@api/repositories/Users/UserRepository';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { InvalidCredentials } from '@api/exceptions/Auth/InvalidCredentials';
 import { AuthService } from '@base/infrastructure/services/auth/AuthService';
-import { LoginRequest } from '@base/api/requests/Auth/LoginRequest';
 import { HashService } from '@base/infrastructure/services/hash/HashService';
+import { LoginRequest } from 'homelab-proxy-manager-api-types';
 
 @Service()
 export class LoginService {

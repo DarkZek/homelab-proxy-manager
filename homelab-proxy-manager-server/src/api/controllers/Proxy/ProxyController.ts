@@ -2,12 +2,10 @@ import { Param, Get, JsonController, Post, Body, Put, Delete, HttpCode, UseBefor
 import { Service } from 'typedi';
 import { AuthCheck } from '@base/infrastructure/middlewares/Auth/AuthCheck';
 import { ControllerBase } from '@base/infrastructure/abstracts/ControllerBase';
-import { UserUpdateRequest } from '@api/requests/Users/UserUpdateRequest';
 import { OpenAPI } from 'routing-controllers-openapi';
 import { RequestQueryParser } from 'typeorm-simple-query-parser';
 import { ProxyService } from '../../services/Proxy/ProxyService';
-import { ProxyCreateRequest } from '../../requests/Proxy/ProxyCreateRequest';
-import { ProxyUpdateRequest } from '../../requests/Proxy/ProxyUpdateRequest';
+import { ProxyUpdateRequest, ProxyCreateRequest } from 'homelab-proxy-manager-api-types';
 
 @Service()
 @OpenAPI({
