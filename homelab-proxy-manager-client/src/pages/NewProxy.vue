@@ -20,9 +20,6 @@
 </template>
 
 <script setup lang="ts">
-import { ProxyStatus } from '@backend/types/ProxyStatus';
-import { ProxyDestinationType } from '@backend/types/ProxyDestinationType';
-import RestApiClient from '../client/RestApiClient';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 

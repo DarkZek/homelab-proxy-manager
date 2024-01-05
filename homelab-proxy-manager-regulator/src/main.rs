@@ -26,6 +26,8 @@ fn main() -> Result<()> {
 
                 let command_name = path.file_name().unwrap().to_str().unwrap();
 
+                println!("Running command {}", command_name);
+
                 match command_name {
                     "local_ports" => {
                         fs::write("./commands/local_ports", local_ports());
@@ -43,8 +45,6 @@ fn main() -> Result<()> {
     // Add a path to be watched. All files and directories at that path and
     // below will be monitored for changes.
     watcher.watch(Path::new("./commands"), RecursiveMode::Recursive)?;
-
-    
 
     std::thread::sleep(Duration::from_secs(60*60*24*365*100));
 

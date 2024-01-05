@@ -7,6 +7,7 @@ services:
             target: development-build-stage
         volumes:
             - ./homelab-proxy-manager-server/:/app/homelab-proxy-manager-server
+            - ./homelab-proxy-manager-regulator/commands/:/mount/regulator-commands
             # Separate volume for node_modules so that linux depepdencies dont break on windows systems and symlinks work for development
             - node_modules:/app/homelab-proxy-manager-server/node_modules
             - ./nginx/sites-enabled/:/app/nginx/sites-enabled/

@@ -14,20 +14,20 @@ const exec = promisify(child_process.exec);
 @OpenAPI({
   security: [{ bearerAuth: [] }],
 })
-@JsonController('/docker')
+@JsonController('/hostsystem')
 @UseBefore(AuthCheck)
-export class DockerController extends ControllerBase {
+export class HostSystemController extends ControllerBase {
   public constructor() {
     super();
   }
 
-  @Get('/list')
+  @Get('/local_ports')
   public async getAll() {
-    const data = await regulatorCommand('docker_containers');
+    const data = await regulatorCommand('local_ports');
 
     const output = data.trim().split('\n').map((line: string) => {
-      const [name, id] = line.split('\t');
-      return { name, id };
+      const [service, port] = line.split('\t');
+      return { service, port };
     });
 
     return output;
