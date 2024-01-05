@@ -3,7 +3,7 @@ import { JsonController, Body, Post } from 'routing-controllers';
 import { RegisterService } from '@api/services/Auth/RegisterService';
 import { ControllerBase } from '@base/infrastructure/abstracts/ControllerBase';
 import { OpenAPI } from 'routing-controllers-openapi';
-import { RegisterRequest } from 'homelab-proxy-manager-api-types';
+import { RegisterRequest } from '@api/types/requests/Auth/RegisterRequest';
 
 @Service()
 @OpenAPI({

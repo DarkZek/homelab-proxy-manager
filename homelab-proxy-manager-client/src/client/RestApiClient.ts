@@ -1,17 +1,20 @@
-import axios, { AxiosInstance } from 'axios';
-import { LoginRequest } from '@shared/requests/Auth/LoginRequest';
+import { LoginRequest } from '@backend/types/requests/Auth/LoginRequest';
+import { GetAllProxiesResponse } from '@backend/types/responses/Proxy/GetAllProxiesResponse';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 class RestApiClient {
     private axios: AxiosInstance;
     
     constructor () {
         this.axios = axios.create({
-            baseURL: '/api',
+            baseURL: 'http://localhost/api',
             timeout: 1000
         });
 
         this.axios.interceptors.request.use((config) => {
             if (config.url === '/login') return config;
+
+            console.log(`Token: ${localStorage.getItem('token')}`)
 
             // Add auth header
             if (!localStorage.getItem('token')) {
@@ -30,7 +33,7 @@ class RestApiClient {
         return this.axios.post('/login', request);
     }
 
-    async getAllProxies() {
+    async getAllProxies(): Promise<AxiosResponse<GetAllProxiesResponse>> {
         return this.axios.get('/proxy');
     }
 }

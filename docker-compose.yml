@@ -9,7 +9,6 @@ services:
             - ./homelab-proxy-manager-server/:/app/homelab-proxy-manager-server
             # Separate volume for node_modules so that linux depepdencies dont break on windows systems and symlinks work for development
             - node_modules:/app/homelab-proxy-manager-server/node_modules
-            - ./homelab-proxy-manager-api-types/:/app/homelab-proxy-manager-api-types
             - ./nginx/sites-enabled/:/app/nginx/sites-enabled/
         restart: "unless-stopped"
         networks:

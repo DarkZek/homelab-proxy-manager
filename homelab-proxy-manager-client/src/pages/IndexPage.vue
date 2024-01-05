@@ -1,5 +1,6 @@
 <template>
   <q-page class="row items-center justify-evenly">
+    <q-btn label="New Proxy" @click="router.push('/proxies/new')" />
     <q-table :columns="columns" :rows="rows">
       <template #body="props">
         <q-tr :props="props">
@@ -17,11 +18,11 @@
             <q-icon
               name="fa-brands fa-docker"
               size="20px"
-              v-if="props.row.destination.type === ProxyDestinationType.DOCKER"
+              v-if="props.row.forward_type === ProxyDestinationType.DOCKER"
             ></q-icon>
             <a class="q-pl-sm"
-              >{{ props.row.destination.name }}:{{
-                props.row.destination.port
+              >{{ props.row.forward_ip }}:{{
+                props.row.forward_port
               }}</a
             >
           </q-td>
@@ -41,6 +42,9 @@
               v-else
             ></q-badge>
           </q-td>
+          <q-td key="edit" :props="props">
+            <q-btn icon="edit" @click="router.push(`/proxies/${props.row.id}`)" dense flat color="grey-8" size="12px" round />
+          </q-td>
         </q-tr>
       </template>
     </q-table>
@@ -51,27 +55,22 @@
 import { ProxyStatus } from '@backend/types/ProxyStatus';
 import { ProxyDestinationType } from '@backend/types/ProxyDestinationType';
 import RestApiClient from '../client/RestApiClient';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const columns = [
   { label: 'Domain', name: 'domains' },
   { label: 'Destination', name: 'destination' },
   { label: 'Status', name: 'status' },
+  { label: '', name: 'edit' },
 ];
 
-const rows = [
-  {
-    domains: ['plex.marshalldoes.dev'],
-    destination: { type: 'DOCKER', name: 'plex:latest', port: '32400' },
-    status: ProxyStatus.ACTIVE,
-  },
-  {
-    domains: ['home.marshalldoes.dev', 'test.marshalldoes.dev'],
-    destination: { type: 'DOCKER', name: 'wordpress:latest', port: '80' },
-    status: ProxyStatus.INACTIVE,
-  },
-];
+const rows = ref();
 
 RestApiClient.getAllProxies().then((proxies) => {
-  console.log(proxies);
+  console.log(proxies.data.rows);
+  rows.value = proxies.data.rows;
 })
 </script>

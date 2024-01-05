@@ -4,7 +4,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { InvalidCredentials } from '@api/exceptions/Auth/InvalidCredentials';
 import { AuthService } from '@base/infrastructure/services/auth/AuthService';
 import { HashService } from '@base/infrastructure/services/hash/HashService';
-import { LoginRequest } from 'homelab-proxy-manager-api-types';
+import { LoginRequest } from '@api/types/requests/Auth/LoginRequest';
 
 @Service()
 export class LoginService {

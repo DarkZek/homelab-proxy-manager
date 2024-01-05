@@ -22,15 +22,15 @@
 
     <q-scroll-area :horizontal-thumb-style="{ opacity: 0 }">
       <q-list padding>
-        <q-item clickable v-ripple>
+        <q-item clickable v-ripple active>
           <q-item-section avatar>
             <q-icon name="inbox" />
           </q-item-section>
 
-          <q-item-section> Inbox </q-item-section>
+          <q-item-section> Proxies </q-item-section>
         </q-item>
 
-        <q-item active clickable v-ripple>
+        <q-item clickable v-ripple>
           <q-item-section avatar>
             <q-icon name="star" />
           </q-item-section>

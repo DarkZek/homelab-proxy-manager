@@ -1,7 +1,8 @@
 import { Param, Get, JsonController, Post, Body, Put, Delete, HttpCode, UseBefore, QueryParams } from 'routing-controllers';
 import { UserService } from '@api/services/Users/UserService';
 import { Service } from 'typedi';
-import { UserCreateRequest, UserUpdateRequest } from 'homelab-proxy-manager-api-types';
+import { UserCreateRequest } from '@api/types/requests/Users/UserCreateRequest';
+import { UserUpdateRequest } from '@api/types/requests/Users/UserUpdateRequest';
 import { AuthCheck } from '@base/infrastructure/middlewares/Auth/AuthCheck';
 import { ControllerBase } from '@base/infrastructure/abstracts/ControllerBase';
 import { OpenAPI } from 'routing-controllers-openapi';

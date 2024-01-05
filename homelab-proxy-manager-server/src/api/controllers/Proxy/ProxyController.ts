@@ -5,7 +5,8 @@ import { ControllerBase } from '@base/infrastructure/abstracts/ControllerBase';
 import { OpenAPI } from 'routing-controllers-openapi';
 import { RequestQueryParser } from 'typeorm-simple-query-parser';
 import { ProxyService } from '../../services/Proxy/ProxyService';
-import { ProxyUpdateRequest, ProxyCreateRequest } from 'homelab-proxy-manager-api-types';
+import { ProxyUpdateRequest } from '@api/types/requests/Proxy/ProxyUpdateRequest';
+import { ProxyCreateRequest } from '@api/types/requests/Proxy/ProxyCreateRequest';
 
 @Service()
 @OpenAPI({

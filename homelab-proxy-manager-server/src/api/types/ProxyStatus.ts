@@ -1,4 +1,5 @@
 export enum ProxyStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
+  ACTIVE = 1,
+  INACTIVE = 2,
+  UNKNOWN = 0,
 }

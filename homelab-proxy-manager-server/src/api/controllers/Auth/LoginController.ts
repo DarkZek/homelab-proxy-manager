@@ -3,7 +3,7 @@ import { Service } from 'typedi';
 import { LoginService } from '@api/services/Auth/LoginService';
 import { ControllerBase } from '@base/infrastructure/abstracts/ControllerBase';
 import { OpenAPI } from 'routing-controllers-openapi';
-import { LoginRequest } from 'homelab-proxy-manager-api-types';
+import { LoginRequest } from '@api/types/requests/Auth/LoginRequest';
 
 @Service()
 @OpenAPI({
