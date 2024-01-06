@@ -1,3 +1,5 @@
+import { ProxyCreateRequest } from '@backend/types/requests/Proxy/ProxyCreateRequest';
+import { DockerGetContainers } from '@backend/types/responses/Docker/DockerGetContainers';
 import { LoginRequest } from '@backend/types/requests/Auth/LoginRequest';
 import { GetAllProxiesResponse } from '@backend/types/responses/Proxy/GetAllProxiesResponse';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
@@ -35,6 +37,18 @@ class RestApiClient {
 
     async getAllProxies(): Promise<AxiosResponse<GetAllProxiesResponse>> {
         return this.axios.get('/proxy');
+    }
+
+    async getDockerContainers(): Promise<AxiosResponse<DockerGetContainers>> {
+        return this.axios.get('/docker/containers');
+    }
+
+    async getDockerPorts(container_id: string): Promise<AxiosResponse<DockerGetContainers>> {
+        return this.axios.get(`/docker/ports/${container_id}`);
+    }
+
+    async createProxy(request: ProxyCreateRequest): Promise<AxiosResponse<any>> {
+        return this.axios.post('/proxy', request);
     }
 }
 

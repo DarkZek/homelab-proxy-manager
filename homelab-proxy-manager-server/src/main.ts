@@ -110,6 +110,9 @@ export class App {
 
   private register404Page() {
     this.app.get('*', function (req, res) {
+      if (res.headersSent) {
+        return;
+      }
       res.status(404).send({ status: 404, message: 'Page Not Found!' });
     });
   }

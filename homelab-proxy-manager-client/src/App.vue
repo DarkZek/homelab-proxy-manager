@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-if (router.currentRoute.value.path === '/') {
+if (!localStorage.getItem('token')) {
   router.push('/login');
 }
 

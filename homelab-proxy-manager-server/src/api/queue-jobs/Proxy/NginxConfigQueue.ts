@@ -3,6 +3,8 @@ import { Proxy } from '../../models/Proxy/Proxy';
 import * as fs from 'fs';
 import child_process from 'child_process';
 import { promisify } from 'node:util';
+import { regulatorCommand } from '../../regulator/command';
+import { ProxyDestinationType } from '../../types/ProxyDestinationType';
 
 const exec = promisify(child_process.exec);
 
@@ -28,11 +30,11 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
         console.log('Updating all proxies');
 
         for (const config of job.proxies) {
-          this.updateProxy(config);
+          await this.updateProxy(config);
         }
 
         // Get all configs files
-        const configs = fs.readdirSync(`${process.env.NGINX_PATH}/sites-enabled/`);
+        const configs = fs.readdirSync(`${process.env.NGINX_PATH}sites-enabled/`);
 
         // Find the ones that weren't included
         const configsToRemove = configs.filter(config => {
@@ -43,7 +45,7 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
 
         // Remove them
         for (const config of configsToRemove) {
-          fs.unlinkSync(`${process.env.NGINX_PATH}/sites-enabled/${config}`);
+          fs.unlinkSync(`${process.env.NGINX_PATH}sites-enabled/${config}`);
           console.log('Deleting nginx config', config)
         }
 
@@ -56,17 +58,24 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
 
     // Update nginx
     console.log('Updating nginx')
-    await exec('nginx -s reload')
+    await regulatorCommand('reload_nginx')
   }
 
-  private updateProxy(config: Proxy) {
+  private async updateProxy(config: Proxy) {
     console.debug(`Updating proxy with id ${config.id}`);
+
+    let ip = config.forward_ip;
+
+    if (config.forward_type === ProxyDestinationType.DOCKER) {
+      // Lookup IP
+      ip = (await regulatorCommand('docker_ip.' + config.forward_ip)).trim();
+    }
 
     const nginxConfig = `
       server {
         server_name ${ config.domains.join(' ') };
         location / {
-            proxy_pass http://${config.forward_ip}:${config.forward_port};
+            proxy_pass http://${ip}:${config.forward_port};
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
@@ -86,7 +95,7 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
       }
     `
 
-    fs.writeFileSync(`${process.env.NGINX_PATH}/sites-enabled/${config.id}.automatic.conf`, nginxConfig);
+    fs.writeFileSync(`${process.env.NGINX_PATH}sites-enabled/${config.id}.automatic.conf`, nginxConfig);
   }
 }
 

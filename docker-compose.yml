@@ -11,25 +11,18 @@ services:
             # Separate volume for node_modules so that linux depepdencies dont break on windows systems and symlinks work for development
             - node_modules:/app/homelab-proxy-manager-server/node_modules
             - ./nginx/sites-enabled/:/app/nginx/sites-enabled/
+        ports:
+            - "3000:3000"
         restart: "unless-stopped"
-        networks:
-            - backend
         depends_on:
             - nginx
     nginx:
+        container_name: homelab-proxy-manager-nginx
         image: nginx:1.25.3-alpine
-        ports:
-            - "80:80"
-            - "443:443"
-        networks:
-            - backend
+        network_mode: "host"
         volumes:
             - ./nginx/sites-enabled/:/etc/nginx/conf.d/
             - ./homelab-proxy-manager-client/dist/spa:/var/www/client
-
-networks:
-    backend:
-        driver: bridge
 
 volumes:
     database:

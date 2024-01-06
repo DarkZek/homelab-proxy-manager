@@ -21,14 +21,29 @@ export class DockerController extends ControllerBase {
     super();
   }
 
-  @Get('/list')
-  public async getAll() {
+  @Get('/containers')
+  public async getContainers() {
     const data = await regulatorCommand('docker_containers');
 
     const output = data.trim().split('\n').map((line: string) => {
       const [name, id] = line.split('\t');
       return { name, id };
     });
+
+    return output;
+  }
+
+  @Get('/ports/:container_id')
+  public async getPorts(@Param('container_id') container_id: string) {
+
+    if (Number.isNaN(parseInt(container_id, 16))) {
+      // Invalid container id
+      throw new Error(`Invalid container id ${container_id}`)
+    }
+
+    const data = await regulatorCommand(`docker_ports.${container_id}`);
+
+    const output = data.trim().split('\n');
 
     return output;
   }

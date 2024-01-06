@@ -22,7 +22,7 @@ export class HostSystemController extends ControllerBase {
   }
 
   @Get('/local_ports')
-  public async getAll() {
+  public async getLocalPorts() {
     const data = await regulatorCommand('local_ports');
 
     const output = data.trim().split('\n').map((line: string) => {

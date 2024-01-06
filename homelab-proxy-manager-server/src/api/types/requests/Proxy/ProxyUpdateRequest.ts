@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsEmail, IsString, MinLength, MaxLength, IsEnum, IsArray, ArrayMinSize, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsString, MinLength, MaxLength, IsEnum, IsArray, ArrayMinSize, IsOptional, IsInt } from 'class-validator';
 import { ProxyDestinationType } from '@api/types/ProxyDestinationType';
 
 export class ProxyUpdateRequest {
@@ -25,4 +25,7 @@ export class ProxyUpdateRequest {
   @ArrayMinSize(1)
   @IsOptional()
   domains: string[];
+
+  @IsInt()
+  status: number;
 }

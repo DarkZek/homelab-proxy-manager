@@ -22,7 +22,7 @@
 
     <q-scroll-area :horizontal-thumb-style="{ opacity: 0 }">
       <q-list padding>
-        <q-item clickable v-ripple active>
+        <q-item clickable v-ripple active @click="router.push('/')">
           <q-item-section avatar>
             <q-icon name="inbox" />
           </q-item-section>
@@ -62,7 +62,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const miniState = ref(true);
 </script>
 

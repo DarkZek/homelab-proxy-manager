@@ -39,10 +39,12 @@ export class ProxyService {
 
     const proxies = (await this.getAll()).rows
 
-    return await NginxConfigQueue.dispatch({
+    await NginxConfigQueue.dispatch({
       type: 'UPDATE_ALL_PROXIES',
       proxies
     });
+
+    return { message: 'Success' }
   }
 
   private async getRequestedProxyOrFail(id: number, resourceOptions?: object) {

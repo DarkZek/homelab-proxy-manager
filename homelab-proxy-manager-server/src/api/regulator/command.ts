@@ -2,7 +2,9 @@ import fs from 'fs';
 
 export async function regulatorCommand(name: string): Promise<string> {
     // Remove old command
-    fs.unlinkSync(`${process.env.REGULATOR_COMMANDS_DIR}${name}`);
+    try { 
+        fs.unlinkSync(`${process.env.REGULATOR_COMMANDS_DIR}${name}`);
+    } catch (e) { }
 
     // Create a file flag to run the command
     fs.closeSync(fs.openSync(`${process.env.REGULATOR_COMMANDS_DIR}${name}`, 'w'));
@@ -23,5 +25,9 @@ export async function regulatorCommand(name: string): Promise<string> {
         }
     }
 
-    return fs.readFileSync(`${process.env.REGULATOR_COMMANDS_DIR}${name}`, 'utf8')
+    const contents = fs.readFileSync(`${process.env.REGULATOR_COMMANDS_DIR}${name}`, 'utf8')
+
+    fs.unlinkSync(`${process.env.REGULATOR_COMMANDS_DIR}${name}`);
+
+    return contents;
 }
