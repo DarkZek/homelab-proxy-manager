@@ -1,0 +1,2 @@
+./nginx/certificates/
+./nginx/sites-enabled/*.automatic.conf

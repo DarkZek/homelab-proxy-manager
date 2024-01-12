@@ -45,6 +45,7 @@ export class DockerController extends ControllerBase {
 
     const output = data.trim().split('\n');
 
-    return output;
+    // Remove duplicates
+    return [...new Set(output)];
   }
 }

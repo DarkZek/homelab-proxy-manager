@@ -22,6 +22,7 @@ services:
         network_mode: "host"
         volumes:
             - ./nginx/sites-enabled/:/etc/nginx/conf.d/
+            - ./nginx/certificates/:/etc/nginx/certs/
             - ./homelab-proxy-manager-client/dist/spa:/var/www/client
 
 volumes:

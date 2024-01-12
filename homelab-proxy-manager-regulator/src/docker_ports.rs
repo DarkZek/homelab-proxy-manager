@@ -1,3 +1,5 @@
+use std::process::Command;
+
 #[cfg(debug_assertions)]
 pub fn docker_ports(id: &str) -> String {
     parse_docker_output("  sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode
@@ -7,18 +9,22 @@ pub fn docker_ports(id: &str) -> String {
 
 #[cfg(not(debug_assertions))]
 pub fn docker_ports(id: &str) -> String {
-    let output = Command::new(format!("docker exec {} cat /proc/net/tcp", id))
+    let output = Command::new("docker").args(["exec", id, "cat", "/proc/net/tcp"])
         .output()
         .expect("Failed to execute command");
 
-    return parse_docker_output(&output);
+    if !output.status.success() {
+        format!("Error: {}", String::from_utf8(output.stderr).unwrap())
+    } else {
+        parse_docker_output(String::from_utf8(output.stdout).unwrap())
+    }
 }
 
-fn parse_docker_output(output: &str) -> String {
+fn parse_docker_output(output: String) -> String {
 
     let mut tsv = String::new();
 
-    let lines = output.split("\n").skip(1);
+    let lines = output.trim().split("\n").skip(1);
 
     for line in lines {
         let mut parts = line.split_whitespace();

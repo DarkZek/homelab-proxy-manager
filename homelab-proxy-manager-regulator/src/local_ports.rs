@@ -1,3 +1,5 @@
+use std::process::Command;
+
 #[cfg(debug_assertions)]
 pub fn local_ports() -> String {
     let output = "LISTEN               0                    4096                                     127.0.0.1:40027                               0.0.0.0:*                users:((\"casaos\",pid=2419679,fd=8))
@@ -57,18 +59,22 @@ pub fn local_ports() -> String {
 
 #[cfg(not(debug_assertions))]
 pub fn local_ports() -> String {
-    let output = Command::new("sudo ss -lntpHO")
+    let output = Command::new("sudo").args(["ss", "-lntpHO"])
         .output()
         .expect("Failed to execute command");
 
-    return parse_netstat_output(output);
+    if !output.status.success() {
+        format!("Error: {}", String::from_utf8(output.stderr).unwrap())
+    } else {
+        parse_netstat_output(String::from_utf8(output.stdout).unwrap())
+    }
 }
 
 fn parse_netstat_output(output: String) -> String {
 
     let mut tsv = String::new();
 
-    let lines = output.split("\n");
+    let lines = output.trim().split("\n");
 
     for line in lines {
         let mut parts = line.split_whitespace();
