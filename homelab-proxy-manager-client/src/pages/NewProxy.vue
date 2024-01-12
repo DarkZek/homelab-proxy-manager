@@ -33,7 +33,10 @@
               </div>
             </div>
 
-            <docker-destination v-if="destinationType === ProxyDestinationType.DOCKER" />
+            <docker-destination
+              v-if="destinationType === ProxyDestinationType.DOCKER"
+              v-model:host="dockerHost"
+              v-model:port="dockerPort" />
               
           </div>
 
@@ -59,6 +62,9 @@ const newDomain = ref('');
 const newDomainObject = ref();
 const domains = ref<string[]>([]);
 
+const dockerHost = ref(undefined)
+const dockerPort = ref(undefined)
+
 const destinationType = ref(ProxyDestinationType.DOCKER);
 
 function submitDomain() {
@@ -76,8 +82,8 @@ function create() {
   RestApiClient.createProxy({
     domains: domains.value,
     forward_type: destinationType.value,
-    forward_ip: dockerHost.value!.label,
-    forward_port: dockerPort.value!.value,
+    forward_ip: dockerHost.value!,
+    forward_port: dockerPort.value!,
     status: ProxyStatus.ACTIVE,
   }).then((proxy) => {
     router.push(`/proxy/${proxy.data.id}`);

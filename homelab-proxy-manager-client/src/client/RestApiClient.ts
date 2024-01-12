@@ -8,8 +8,11 @@ class RestApiClient {
     private axios: AxiosInstance;
     
     constructor () {
+
+        const baseURL = localStorage.getItem('apiOverride') ?? '/api';
+
         this.axios = axios.create({
-            baseURL: 'http://localhost/api',
+            baseURL,
             timeout: 1000
         });
 

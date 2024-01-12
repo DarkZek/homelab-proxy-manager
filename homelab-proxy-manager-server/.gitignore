@@ -5,4 +5,4 @@ temp
 src/schema.gql
 .vscode
 .idea
-database
+./database

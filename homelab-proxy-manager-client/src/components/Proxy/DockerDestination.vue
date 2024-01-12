@@ -13,10 +13,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, defineModel } from 'vue';
 import RestApiClient from '../../client/RestApiClient';
 
-const dockerHost = ref('');
+const hostBind = defineModel<string | undefined>('host');
+const dockerHost = ref<{ label: string, value: string } | undefined>('');
+watch(() => dockerHost.value, () => {
+  hostBind.value = dockerHost.value?.value ? dockerHost.value.value : undefined;
+})
+
 const dockerContainers = ref<{name: string, id: string}[]>([]);
 const dockerHostsLoading = ref(true)
 
@@ -37,7 +42,12 @@ function loadDockerHosts() {
 }
 loadDockerHosts();
 
+const portBind = defineModel<string | undefined>('port');
 const dockerPort = ref<{ label: string, value: string } | undefined>(undefined);
+watch(() => dockerPort.value, () => {
+  portBind.value = dockerPort.value?.value ? dockerPort.value.value : undefined;
+})
+
 const dockerPortsLoading = ref(true);
 const dockerPortsData = ref<{ label: string, value: string }[]>([]);
 const customPort = ref('');
