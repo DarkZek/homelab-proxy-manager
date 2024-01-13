@@ -5,4 +5,5 @@ temp
 src/schema.gql
 .vscode
 .idea
-./database
+database.sqlite3
+https_config.json
