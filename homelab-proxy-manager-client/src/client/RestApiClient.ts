@@ -19,8 +19,6 @@ class RestApiClient {
         this.axios.interceptors.request.use((config) => {
             if (config.url === '/login') return config;
 
-            console.log(`Token: ${localStorage.getItem('token')}`)
-
             // Add auth header
             if (!localStorage.getItem('token')) {
                 alert('logout')
@@ -52,6 +50,10 @@ class RestApiClient {
 
     async createProxy(request: ProxyCreateRequest): Promise<AxiosResponse<any>> {
         return this.axios.post('/proxy', request);
+    }
+
+    async updateProxies(): Promise<AxiosResponse<any>> {
+        return this.axios.post('/proxy/update');
     }
 }
 

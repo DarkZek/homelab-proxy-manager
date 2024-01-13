@@ -1,6 +1,7 @@
 <template>
   <q-page class="row items-center justify-evenly">
     <q-btn label="New Proxy" @click="router.push('/proxies/new')" />
+    <q-btn label="Update Proxies" @click="RestApiClient.updateProxies()" />
     <q-table :columns="columns" :rows="rows">
       <template #body="props">
         <q-tr :props="props">

@@ -48,7 +48,7 @@ watch(() => dockerPort.value, () => {
   portBind.value = dockerPort.value?.value ? dockerPort.value.value : undefined;
 })
 
-const dockerPortsLoading = ref(true);
+const dockerPortsLoading = ref(false);
 const dockerPortsData = ref<{ label: string, value: string }[]>([]);
 const customPort = ref('');
 const dockerPortsOptions = computed(() => {
