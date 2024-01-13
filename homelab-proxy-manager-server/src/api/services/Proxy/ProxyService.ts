@@ -4,6 +4,7 @@ import { UserNotFoundException } from '@api/exceptions/Users/UserNotFoundExcepti
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { ProxyRepository } from '../../repositories/Proxy/ProxyRepository';
 import NginxConfigQueue, { ProxyJob } from '../../queue-jobs/Proxy/NginxConfigQueue';
+import acme, { Client as AcmeClient } from 'acme-client';
 
 @Service()
 export class ProxyService {

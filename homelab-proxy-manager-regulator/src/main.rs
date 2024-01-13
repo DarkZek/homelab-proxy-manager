@@ -6,12 +6,14 @@ use local_ports::local_ports;
 use docker_ports::docker_ports;
 use docker_containers::docker_containers;
 use docker_ip::docker_ip;
+use reload_nginx::reload_nginx;
 use notify::{Watcher, Event, RecursiveMode, Result, EventKind};
 
 mod local_ports;
 mod docker_containers;
 mod docker_ports;
 mod docker_ip;
+mod reload_nginx;
 
 fn main() -> Result<()> {
 
@@ -61,9 +63,7 @@ fn main() -> Result<()> {
                         fs::write(format!("./commands/docker_ip.{}", container_name), docker_ip(&container_name)).unwrap();
                     },
                     "reload_nginx" => {
-                        Command::new("docker exec homelab-proxy-manager-nginx nginx -s reload")
-                            .output()
-                            .expect("Failed to execute command");
+                        reload_nginx();
                     }
                     _ => println!("Unknown command {}", command_name),
                 }

@@ -1,3 +1,5 @@
+use std::process::Command;
+
 #[cfg(debug_assertions)]
 pub fn docker_containers() -> String {
     parse_docker_output("\tportfolio_web_1\t1ee0b0ee448b
@@ -14,18 +16,22 @@ pub fn docker_containers() -> String {
 
 #[cfg(not(debug_assertions))]
 pub fn docker_containers() -> String {
-    let output = Command::new("docker ps --format \"{{.Names}}\t{{.ID}}\"")
+    let output = Command::new("docker").args(["ps", "--format", "{{.Names}}\t{{.ID}}"])
         .output()
         .expect("Failed to execute command");
 
-    return parse_docker_output(output);
+    if !output.status.success() {
+        format!("Error: {}", String::from_utf8(output.stderr).unwrap())
+    } else {
+        parse_docker_output(String::from_utf8(output.stdout).unwrap())
+    }
 }
 
 fn parse_docker_output(output: String) -> String {
 
     let mut tsv = String::new();
 
-    let lines = output.split("\n");
+    let lines = output.trim().split("\n");
 
     for line in lines {
         let mut parts = line.split_whitespace();

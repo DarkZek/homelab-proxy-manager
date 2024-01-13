@@ -87,6 +87,11 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
         }
 
         listen 443 ssl;
+
+        ssl_certificate     /etc/nginx/certs/self-signed.crt;
+        ssl_certificate_key /etc/nginx/certs/self-signed.key;
+        ssl_protocols       TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+        ssl_ciphers         HIGH:!aNULL:!MD5;
       }
       server {
           return 301 https://$host$request_uri;
