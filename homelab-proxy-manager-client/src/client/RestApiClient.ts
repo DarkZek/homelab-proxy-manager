@@ -13,7 +13,7 @@ class RestApiClient {
 
         this.axios = axios.create({
             baseURL,
-            timeout: 1000
+            timeout: 5000
         });
 
         this.axios.interceptors.request.use((config) => {

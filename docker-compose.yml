@@ -11,6 +11,7 @@ services:
             # Separate volume for node_modules so that linux depepdencies dont break on windows systems and symlinks work for development
             - node_modules:/app/homelab-proxy-manager-server/node_modules
             - ./nginx/sites-enabled/:/app/nginx/sites-enabled/
+            - ./nginx/certificates/:/app/nginx/certificates/
         ports:
             - "3000:3000"
         restart: "unless-stopped"
@@ -22,7 +23,7 @@ services:
         network_mode: "host"
         volumes:
             - ./nginx/sites-enabled/:/etc/nginx/conf.d/
-            - ./nginx/certificates/:/etc/nginx/certs/
+            - ./nginx/certificates/:/etc/nginx/certificates/
             - ./homelab-proxy-manager-client/dist/spa:/var/www/client
 
 volumes:

@@ -29,10 +29,10 @@ export class HttpsController extends ControllerBase {
     return 'Success'
   }
 
-  @Post('/proxy/:id/gen_cert')
-  public async newCertificate(@Param('id') id: number) {
+  @Post('/https/:domain/gen_cert')
+  public async newCertificate(@Param('domain') domain: string) {
 
-    await this.httpsService.requestHttpsCertificate(id);
+    await this.httpsService.requestHttpsCertificate(domain);
 
     return 'Success'
   }

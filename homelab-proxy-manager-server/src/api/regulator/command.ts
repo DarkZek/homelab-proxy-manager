@@ -23,7 +23,7 @@ export async function regulatorCommand(name: string): Promise<string> {
 
         if (i === REGULATOR_MAX_ATTEMPTS - 1) {
             // Timeout
-            throw new Error(`Timeout running ${name}. Ensure daemon is running`);
+            throw new Error(`Timeout running ${name}. Ensure regulator daemon is running`);
         }
     }
 

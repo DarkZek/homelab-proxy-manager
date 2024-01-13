@@ -1,3 +1,6 @@
+chown $USER:$USER -R ./homelab-proxy-manager-client/dist
+chown $USER:$USER -R ./homelab-proxy-manager-server/node_modules
+
 cd ../homelab-proxy-manager-client
 npm ci
 npm run build

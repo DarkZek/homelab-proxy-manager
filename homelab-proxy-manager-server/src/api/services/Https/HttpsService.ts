@@ -12,6 +12,7 @@ export class HttpsService {
 
   contactEmail: undefined | string = undefined;
   accountPrivateKey: undefined | Buffer = undefined;
+  accountUrl: undefined | string = undefined;
 
   client: AcmeClient | undefined = undefined;
 
@@ -24,6 +25,7 @@ export class HttpsService {
       const config = JSON.parse(fs.readFileSync('./https_config.json').toString())
       this.contactEmail = config.contactEmail;
       this.accountPrivateKey = Buffer.from(config.accountPrivateKey, 'hex');
+      this.accountUrl = config.accountUrl;
     }
 
     if (this.contactEmail !== undefined && this.accountPrivateKey !== undefined) {
@@ -35,38 +37,40 @@ export class HttpsService {
     this.contactEmail = contactEmail;
     this.accountPrivateKey = await acme.crypto.createPrivateKey()
 
+    await this.setupClient();
+
     // Save to file
     // TODO: Store this in a more central location
-    fs.writeFileSync('./https_config.json', JSON.stringify({ contactEmail: this.contactEmail, accountPrivateKey: this.accountPrivateKey.toString('hex') }), undefined);
-
-    await this.setupClient();
+    fs.writeFileSync('./https_config.json', JSON.stringify({
+      contactEmail: this.contactEmail,
+      accountPrivateKey: this.accountPrivateKey.toString('hex'),
+      accountUrl: this.accountUrl
+    }), undefined);
   }
 
   private async setupClient() {
+
     this.client = new AcmeClient({
         directoryUrl: acme.directory.letsencrypt.staging,
-        accountKey: this.accountPrivateKey
+        accountKey: this.accountPrivateKey,
+        accountUrl: this.accountUrl
     });
 
     await this.client.createAccount({
         termsOfServiceAgreed: true,
         contact: [`mailto:${this.contactEmail}`]
     });
+
+    this.accountUrl = this.client.getAccountUrl();
   }
 
-  public async requestHttpsCertificate(id: number) {
+  public async requestHttpsCertificate(domain: string) {
 
-    const proxy = await this.proxyRepository.getOneById(id);
-
-    if (proxy === undefined) {
-      throw new Error('Proxy not found');
-    }
-
-    console.log(`Running requestHttpsCertificate for proxy ${proxy.id} with domains ${proxy.domains.join(', ') }`)
+    console.log(`Running requestHttpsCertificate for domain ${domain}`)
 
     const order = await this.client.createOrder({
         identifiers: [
-            { type: 'dns', value: proxy.domains[0] },
+            { type: 'dns', value: domain },
         ]
     });
 
@@ -75,18 +79,12 @@ export class HttpsService {
     // Fetch the http authorization challenge
     const authorization = authorizations[0]
     const challenge = authorization.challenges[0]
-    console.log('cha')
 
     const keyAuthorization = await this.client.getChallengeKeyAuthorization(challenge);
 
     this.challenges[challenge.token] = keyAuthorization;
 
-    //console.log({ keyAuthorization, challenge })
-
-    console.log('waa')
-
     await this.client.verifyChallenge(authorization, challenge);
-    console.log('he')
 
     await this.client.completeChallenge(challenge);
 
@@ -95,16 +93,17 @@ export class HttpsService {
     delete this.challenges[challenge.token];
 
     const [key, csr] = await acme.crypto.createCsr({
-      commonName: proxy.domains[0],
-      altNames: [proxy.domains[0]]
+      commonName: domain,
+      altNames: [domain]
     });
 
     const finalized = await this.client.finalizeOrder(order, csr);
     const cert = await this.client.getCertificate(finalized);
 
-    console.log(`CSR:\n${csr.toString()}`);
-    console.log(`Private key:\n${key.toString()}`);
-    console.log(`Certificate:\n${cert.toString()}`);
+    fs.writeFileSync(`${process.env.NGINX_PATH}certificates/${domain}.key`, key.toString());
+    fs.writeFileSync(`${process.env.NGINX_PATH}certificates/${domain}.crt`, cert.toString());
+
+    console.log(`Successfully requested certificate for ${domain}`)
 
     return 'Success'
   }

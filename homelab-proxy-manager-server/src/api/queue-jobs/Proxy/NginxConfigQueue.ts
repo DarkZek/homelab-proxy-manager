@@ -88,15 +88,28 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
 
         listen 443 ssl;
 
-        ssl_certificate     /etc/nginx/certs/self-signed.crt;
-        ssl_certificate_key /etc/nginx/certs/self-signed.key;
+        ssl_certificate     /etc/nginx/certificates/self-signed.crt;
+        ssl_certificate_key /etc/nginx/certificates/self-signed.key;
         ssl_protocols       TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
         ssl_ciphers         HIGH:!aNULL:!MD5;
       }
       server {
+        location /.well-known/acme-challenge {
+          proxy_pass http://127.0.0.1:3000/api/.well-known/acme-challenge;
+          proxy_http_version 1.1;
+
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location / {
           return 301 https://$host$request_uri;
-          server_name ${ config.domains.join(' ') };
-          listen 80;
+        }
+
+        server_name ${ config.domains.join(' ') };
+        listen 80;
       }
     `
 
