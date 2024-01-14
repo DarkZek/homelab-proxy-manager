@@ -63,7 +63,7 @@ const props = defineProps<{ proxy: Proxy }>();
 <style lang="scss" scoped>
 
 .q-avatar {
-    box-shadow: $shadow-4;
+    filter: $shadow;
 }
 
 .status-point {

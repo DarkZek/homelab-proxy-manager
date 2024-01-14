@@ -44,7 +44,7 @@ class RestApiClient {
 
         // Detect logouts
         this.axios.interceptors.response.use(undefined, (error) => {
-            if (error?.response?.status === 401) {
+            if (error?.response?.status === 401 && error?.config?.meta?.noAuth !== true) {
                 localStorage.removeItem('token');
                 window.location.href = '/login';
             }

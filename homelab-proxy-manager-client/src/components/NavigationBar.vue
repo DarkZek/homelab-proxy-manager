@@ -30,6 +30,10 @@
         <q-icon name="o_settings" />
         <span>Settings</span>
       </div>
+      <div class="navigation-item" @click="signOut">
+        <q-icon name="o_logout" />
+        <span>Sign Out</span>
+      </div>
     </div>
   </div>
 </template>
@@ -40,13 +44,18 @@ import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
 const route = useRoute();
+
+function signOut() {
+  localStorage.removeItem('token');
+  router.push('/login');
+}
 </script>
 
 <style lang="scss" scoped>
 
 .navbar {
   width: 400px;
-  padding-left: 30px;
+  padding-left: 15px;
   border-right: #CED0DC 2px solid;
   height: 100vh;
   display: flex;
@@ -71,7 +80,7 @@ const route = useRoute();
     background-repeat: no-repeat;
     cursor: pointer;
     
-    box-shadow: $shadow-3;
+    box-shadow: $shadow-4;
   }
 
   span {
@@ -95,6 +104,7 @@ const route = useRoute();
   color: $inactive-text;
   cursor: pointer;
   font-size: 20px;
+  transition: color 0.1s ease-in-out;
 
   .q-icon {
     font-size: 30px;

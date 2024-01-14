@@ -1,7 +1,7 @@
 <template>
   <q-page class="row items-center justify-evenly">
     <q-card>
-      <q-form @submit="login" class="q-pa-lg">
+      <q-form @submit.prevent="login" class="q-pa-lg">
         <a>Homelab Proxy Manager</a>
         <br>
         <a>Login</a>

@@ -39,10 +39,10 @@ RestApiClient.getAllProxies().then((proxies) => {
 .proxy-view {
   margin-bottom: 30px;
   cursor: pointer;
-  transition: box-shadow 0.1s ease-in-out;
+  transition: filter 0.1s ease-in-out;
 
   &:hover {
-    box-shadow: $shadow-4;
+    filter: $shadow;
   }
 }
 

@@ -23,7 +23,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/proxies/new',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/NewProxy.vue') }],
+    children: [{ path: '', component: () => import('pages/ProxyWizard.vue') }],
     meta: {
       requiresAuth: true,
     },
