@@ -36,8 +36,6 @@ async function login() {
 
     localStorage.setItem('token', response.data.access_token);
 
-    const user = response.data.user;
-
     router.replace('/');
   } catch (error: any) {
     if (error.response.status === 401) {
@@ -47,4 +45,11 @@ async function login() {
     }
   }
 }
+
+// Check if setup is required
+RestApiClient.checkSetup().then((val) => {
+  if (val.data) {
+    router.replace('/setup');
+  }
+})
 </script>

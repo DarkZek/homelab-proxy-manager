@@ -1,11 +1,14 @@
-import { IsNotEmpty, IsString, MinLength, MaxLength, IsEnum, IsArray, ArrayMinSize, IsInt } from 'class-validator';
+import { IsNotEmpty, IsString, MinLength, MaxLength, IsEnum, IsArray, ArrayMinSize, IsInt, IsBoolean } from 'class-validator';
 import { ProxyDestinationType } from '@api/types/ProxyDestinationType';
 
 export class ProxyCreateRequest {
   @IsEnum(ProxyDestinationType)
   forward_type: ProxyDestinationType;
 
-  @MaxLength(20)
+  @IsString()
+  name: string;
+
+  @MaxLength(191)
   @MinLength(2)
   @IsString()
   @IsNotEmpty()
@@ -17,12 +20,15 @@ export class ProxyCreateRequest {
   @IsNotEmpty()
   forward_port: string;
 
-  @IsString({ each: true })
-  @IsArray()
-  @IsNotEmpty()
-  @ArrayMinSize(1)
-  domains: string[];
+  @IsBoolean()
+  forward_https: boolean;
+
+  @IsString()
+  domain: string;
 
   @IsInt()
   status: number;
+
+  @IsBoolean()
+  supports_https: boolean;
 }

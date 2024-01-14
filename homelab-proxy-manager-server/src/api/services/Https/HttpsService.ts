@@ -51,7 +51,7 @@ export class HttpsService {
   private async setupClient() {
 
     this.client = new AcmeClient({
-        directoryUrl: acme.directory.letsencrypt.staging,
+        directoryUrl: acme.directory.letsencrypt.production,
         accountKey: this.accountPrivateKey,
         accountUrl: this.accountUrl
     });

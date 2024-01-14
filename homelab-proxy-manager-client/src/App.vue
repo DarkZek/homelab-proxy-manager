@@ -3,12 +3,12 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+</script>
 
-const router = useRouter();
+<style scoped lang="scss">
 
-if (!localStorage.getItem('token')) {
-  router.push('/login');
+body {
+  background: #F4F7FA;
 }
 
-</script>
+</style>

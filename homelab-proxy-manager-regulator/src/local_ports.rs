@@ -64,7 +64,9 @@ pub fn local_ports() -> String {
         .expect("Failed to execute command");
 
     if !output.status.success() {
-        format!("Error: {}", String::from_utf8(output.stderr).unwrap())
+        let message = format!("Error: {}", String::from_utf8(output.stderr).unwrap());
+        println!("{}", message);
+        message
     } else {
         parse_netstat_output(String::from_utf8(output.stdout).unwrap())
     }

@@ -33,15 +33,15 @@ export class DockerController extends ControllerBase {
     return output;
   }
 
-  @Get('/ports/:container_id')
-  public async getPorts(@Param('container_id') container_id: string) {
+  @Get('/ports/:container_name')
+  public async getPorts(@Param('container_name') container_name: string) {
 
-    if (Number.isNaN(parseInt(container_id, 16))) {
-      // Invalid container id
-      throw new Error(`Invalid container id ${container_id}`)
+    if (!/^[a-zA-Z0-9_-]+$/.test(container_name)) {
+      // Invalid container name
+      throw new Error(`Invalid container name ${container_name}`)
     }
 
-    const data = await regulatorCommand(`docker_ports.${container_id}`);
+    const data = await regulatorCommand(`docker_ports.${container_name}`);
 
     const output = data.trim().split('\n');
 

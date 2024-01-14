@@ -14,7 +14,9 @@ pub fn docker_ports(id: &str) -> String {
         .expect("Failed to execute command");
 
     if !output.status.success() {
-        format!("Error: {}", String::from_utf8(output.stderr).unwrap())
+        let message = format!("Error: {}", String::from_utf8(output.stderr).unwrap());
+        println!("{}", message);
+        message
     } else {
         parse_docker_output(String::from_utf8(output.stdout).unwrap())
     }

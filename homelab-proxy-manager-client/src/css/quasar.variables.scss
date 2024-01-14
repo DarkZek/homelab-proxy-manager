@@ -23,3 +23,10 @@ $positive  : #21BA45;
 $negative  : #C10015;
 $info      : #31CCEC;
 $warning   : #F2C037;
+
+$text      : #33343D;
+$inactive-text      : #818391;
+
+.bg-text {
+    color: $text;
+}

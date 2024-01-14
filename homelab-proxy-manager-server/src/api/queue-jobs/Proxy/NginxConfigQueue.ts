@@ -73,7 +73,7 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
 
     const nginxConfig = `
       server {
-        server_name ${ config.domains.join(' ') };
+        server_name ${ config.domain };
         location / {
             proxy_pass http://${ip}:${config.forward_port};
             proxy_http_version 1.1;
@@ -88,8 +88,8 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
 
         listen 443 ssl;
 
-        ssl_certificate     /etc/nginx/certificates/self-signed.crt;
-        ssl_certificate_key /etc/nginx/certificates/self-signed.key;
+        ssl_certificate     /etc/nginx/certificates/${config.domain}.crt;
+        ssl_certificate_key /etc/nginx/certificates/${config.domain}.key;
         ssl_protocols       TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
         ssl_ciphers         HIGH:!aNULL:!MD5;
       }
@@ -108,7 +108,7 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
           return 301 https://$host$request_uri;
         }
 
-        server_name ${ config.domains.join(' ') };
+        server_name ${ config.domain };
         listen 80;
       }
     `

@@ -13,6 +13,11 @@ export class RegisterService {
   }
 
   public async register(data: object) {
+
+    if (await this.userRepository.count() > 0) {
+      throw new Error('User already registered');
+    }
+    
     let user = await this.userRepository.createUser(data);
 
     user = await this.userRepository.findOne({

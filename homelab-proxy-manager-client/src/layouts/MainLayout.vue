@@ -16,5 +16,9 @@ import NavigationBar from '../components/NavigationBar.vue';
 <style lang="scss" setup>
 .q-layout {
   background-color: #fafafa;
+  display: flex;
+}
+.q-page-container {
+  width: 100%;
 }
 </style>

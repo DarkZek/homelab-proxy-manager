@@ -46,12 +46,15 @@ fn main() -> Result<()> {
                         fs::write("./commands/docker_containers", docker_containers()).unwrap();
                     },
                     "docker_ports" => {
-                        let container_id = command_args.next().unwrap();
-                        if let Err(_) = i64::from_str_radix(container_id, 16) {
-                            println!("Invalid container id requested {}", container_id);
+                        let container_name = command_args.next().unwrap();
+
+                        let allowed_characters = "abcdefghijklmnopqrstuvwxyz0123456789-_".chars();
+                        
+                        if container_name.chars().any(|c| !allowed_characters.clone().any(|ac| ac == c)) {
+                            println!("Invalid container name requested {}", container_name);
                             return;
                         }
-                        fs::write(format!("./commands/docker_ports.{}", container_id), docker_ports(container_id)).unwrap();
+                        fs::write(format!("./commands/docker_ports.{}", container_name), docker_ports(container_name)).unwrap();
                     },
                     "docker_ip" => {
                         let allowed_characters = "abcdefghijklmnopqrstuvwxyz0123456789-_".chars();
@@ -63,7 +66,7 @@ fn main() -> Result<()> {
                         fs::write(format!("./commands/docker_ip.{}", container_name), docker_ip(&container_name)).unwrap();
                     },
                     "reload_nginx" => {
-                        reload_nginx();
+                        fs::write("./commands/reload_nginx", reload_nginx()).unwrap();
                     }
                     _ => println!("Unknown command {}", command_name),
                 }

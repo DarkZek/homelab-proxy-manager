@@ -9,7 +9,7 @@ define(Proxy, (faker: typeof Faker) => {
   proxy.forward_port = faker.internet.port().toString();
   proxy.forward_ip = faker.internet.ip();
   proxy.id = faker.random.number();
-  proxy.domains = [faker.internet.domainName(), faker.internet.domainName(), faker.internet.domainName()];
+  proxy.domain = [faker.internet.domainName()];
 
   return proxy;
 });

@@ -1,8 +1,7 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <q-form @submit="create">
+    <q-form @submit="update">
       <q-card class="q-pa-xl">
-        <q-input v-model="name" label="Name"></q-input>
         <q-input
           v-model="domain"
           placeholder="Domain Name"
@@ -50,25 +49,26 @@
             </a>
           </div>
 
-          <q-btn type="submit" label="Create" :loading="loading" />
+          <q-btn type="submit" label="Save" :loading="loading" />
       </q-card>
+
+      <q-btn color="red-6" label="Delete" @click="deleteProxy" />
     </q-form>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { ProxyDestinationType } from '../../../homelab-proxy-manager-server/src/api/types/ProxyDestinationType';
+import { useRouter, useRoute } from 'vue-router';
+import { ProxyDestinationType } from '@backend/types/ProxyDestinationType';
 import RestApiClient from '../client/RestApiClient';
 import { ProxyStatus } from '@backend/types/ProxyStatus';
 import DockerDestination from '../components/Docker/DockerDestination.vue';
 
 const router = useRouter();
+const route = useRoute();
 
 const loading = ref(false);
-
-const name = ref('');
 
 const domain = ref<string>('');
 
@@ -95,27 +95,43 @@ function generateCertificates() {
     });
 }
 
-
-function create() {
+async function update() {
   loading.value = true;
 
-  RestApiClient.createProxy({
-    name: name.value,
-    domain: domain.value,
-    forward_type: destinationType.value,
-    forward_ip: dockerHost.value!,
-    forward_port: dockerPort.value!,
-    forward_https: forwardHttps.value,
-    supports_https: supportsHttps.value,
-    status: ProxyStatus.ACTIVE,
-  }).then((proxy) => {
-    router.push(`/proxies/${proxy.data.id}`);
-  }).finally(() => {
+  try {
+    await RestApiClient.updateProxy(route.params.id, {
+      domain: domain.value,
+      forward_type: destinationType.value,
+      forward_ip: dockerHost.value!,
+      forward_port: dockerPort.value!,
+      forward_https: forwardHttps.value,
+      supports_https: supportsHttps.value,
+      status: ProxyStatus.ACTIVE,
+    });
+
+    await RestApiClient.updateProxies();
+
+    router.push('/');
+  } finally {
     loading.value = false;
-  });
+  }
 }
 
+// Load info
+RestApiClient.getProxy(route.params.id).then((proxy) => {
+  domain.value = proxy.data.domain;
+  destinationType.value = proxy.data.forward_type;
+  dockerHost.value = proxy.data.forward_ip;
+  dockerPort.value = proxy.data.forward_port;
+  forwardHttps.value = proxy.data.forward_https;
+  supportsHttps.value = proxy.data.supports_https;
+});
 
+function deleteProxy() {
+  RestApiClient.deleteProxy(route.params.id).then(() => {
+    router.push('/');
+  });
+}
 
 </script>
 

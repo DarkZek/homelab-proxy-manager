@@ -4,6 +4,7 @@ import {
   createRouter,
   createWebHashHistory,
   createWebHistory,
+  useRouter,
 } from 'vue-router';
 
 import routes from './routes';
@@ -16,6 +17,7 @@ import routes from './routes';
  * async/await or return a Promise which resolves
  * with the Router instance.
  */
+const router = useRouter();
 
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
@@ -31,6 +33,12 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
+
+  Router.beforeEach(async (to, from) => {
+    if (!localStorage.getItem('token') && to.meta.requiresAuth) {
+      return { path: '/login' }
+    }
+  })
 
   return Router;
 });

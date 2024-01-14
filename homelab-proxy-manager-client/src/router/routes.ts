@@ -4,7 +4,10 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    children: [{ path: '', component: () => import('pages/ProxiesPage.vue'), name: 'Proxies', }],
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/login',
@@ -12,9 +15,26 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/LoginPage.vue') }],
   },
   {
+    name: 'Setup',
+    path: '/setup',
+    component: () => import('layouts/PlainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/SetupPage.vue') }],
+  },
+  {
     path: '/proxies/new',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/NewProxy.vue') }],
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/proxies/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditProxy.vue') }],
+    meta: {
+      requiresAuth: true,
+    },
   },
 
   // Always leave this as last one,

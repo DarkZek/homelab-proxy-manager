@@ -1,85 +1,112 @@
 <template>
-  <q-drawer
-    show-if-above
-    :mini="miniState"
-    @mouseover="miniState = false"
-    @mouseout="miniState = true"
-    mini-to-overlay
-    :width="200"
-    :breakpoint="500"
-    bordered
+  <div
     class="navbar"
   >
-    <q-img src="https://cdn.quasar.dev/img/material.png" style="height: 150px">
-      <div class="absolute-bottom bg-transparent">
-        <q-avatar size="56px" class="q-mb-sm">
-          <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-        </q-avatar>
-        <div class="text-weight-bold">Marshall Scott</div>
-        <div>darkzek@serverrack</div>
+
+    <div class="product">
+      <div class="logo" @click.prevent="router.push('/')" />
+      <span>HomeLab<br />Proxy<br />Manager</span>
+    </div>
+
+    <div class="navigation-items">
+      <div class="navigation-item" :active="route.name === 'Proxies'" @click="router.push('/')">
+        <q-icon name="o_language" />
+        <span>Proxies</span>
       </div>
-    </q-img>
+      <div class="navigation-item" :active="route.name === 'Certificates'" @click="router.push('/certificates')">
+        <q-icon name="o_verified_user" />
+        <span>Certificates</span>
+      </div>
+    </div>
 
-    <q-scroll-area :horizontal-thumb-style="{ opacity: 0 }">
-      <q-list padding>
-        <q-item clickable v-ripple active @click="router.push('/')">
-          <q-item-section avatar>
-            <q-icon name="inbox" />
-          </q-item-section>
+    <q-space />
 
-          <q-item-section> Proxies </q-item-section>
-        </q-item>
-
-        <q-item clickable v-ripple>
-          <q-item-section avatar>
-            <q-icon name="star" />
-          </q-item-section>
-
-          <q-item-section> Star </q-item-section>
-        </q-item>
-
-        <q-item clickable v-ripple>
-          <q-item-section avatar>
-            <q-icon name="send" />
-          </q-item-section>
-
-          <q-item-section> Send </q-item-section>
-        </q-item>
-
-        <q-separator />
-
-        <q-item clickable v-ripple>
-          <q-item-section avatar>
-            <q-icon name="drafts" />
-          </q-item-section>
-
-          <q-item-section> Drafts </q-item-section>
-        </q-item>
-      </q-list>
-    </q-scroll-area>
-  </q-drawer>
+    <div class="navigation-items">
+      <div class="navigation-item" :active="route.name === 'Debugging'" @click="router.push('/debugging')">
+        <q-icon name="o_search" />
+        <span>Debugging</span>
+      </div>
+      <div class="navigation-item" :active="route.name === 'Settings'" @click="router.push('/settings')">
+        <q-icon name="o_settings" />
+        <span>Settings</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
-const miniState = ref(true);
+const route = useRoute();
 </script>
 
 <style lang="scss" scoped>
-:deep(.q-drawer) {
-  transition: width 0.15s ease-in-out, display 0.15s ease-in-out;
+
+.navbar {
+  width: 400px;
+  padding-left: 30px;
+  border-right: #CED0DC 2px solid;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.q-scrollarea {
-  height: calc(100% - 150px);
+.product {
+  display: flex;
+  flex-direction: row;
+  margin-top: 40px;
+  flex-shrink: 1;
+
+  .logo {
+    width: 80px;
+    height: 80px;
+    padding: 10px;
+    margin: 20px;
+    background-image: url('/assets/logo.svg');
+    background-position: center;
+    background-size: 80%;
+    border-radius: 20px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    
+    box-shadow: $shadow-3;
+  }
+
+  span {
+    font-size: 20px;
+    font-weight: 500;
+    font-family: 'Ubuntu', sans-serif;
+    margin-top: 24px;
+    font-weight: bold;
+    color: $text;
+    line-height: 120%;
+  }
 }
 
-.q-item {
-  text-align: left !important;
-  justify-content: left !important;
-  padding: 10px 16px !important;
+.navigation-items {
+  padding: 20px 0px;
+}
+
+.navigation-item {
+  padding: 20px;
+  font-weight: bold;
+  color: $inactive-text;
+  cursor: pointer;
+  font-size: 20px;
+
+  .q-icon {
+    font-size: 30px;
+    margin-right: 10px;
+  }
+
+  &[active=true] {
+    color: $text;
+  }
+
+  &:hover {
+    color: $text;
+  }
 }
 </style>
