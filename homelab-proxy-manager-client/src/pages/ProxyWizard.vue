@@ -1,11 +1,11 @@
 <template>
   <q-page class="col">
-    <div class="row">
-      <transition appear leave-active-class="animated slideUp">
+    <div class="row" style="position: relative;">
+      <transition name="slideUp">
         <part-one-slide v-if="part === 1" v-model="domain" @next="part = 2" />
       </transition>
-      <transition appear leave-active-class="animated slideUp">
-        <part-two-slide v-if="part === 2" @next="part = 3" />
+      <transition name="slideUp">
+        <part-two-slide v-if="part === 2" @next="part = 3" :domain="domain" />
       </transition>
     </div>
   </q-page>
@@ -28,7 +28,5 @@ const domain = ref('');
   padding: 80px;
   max-width: 1000px;
 }
-
-
 
 </style>

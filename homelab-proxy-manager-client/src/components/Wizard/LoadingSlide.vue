@@ -1,5 +1,5 @@
 <template>
-    <flat-card class="q-pa-lg" :loading="props.loading">
+    <flat-card class="q-pa-lg" :loading="props.loading" :error="props.error">
         <div class="row align-items full-width">
             <div class="outer circle"></div>
             <div class="inner circle"></div>
@@ -10,6 +10,24 @@
                 <a class="title text-white">{{ texts.title }}</a>
                 <br>
                 <span class="content">{{ texts.subtitle }}</span>
+                <br>
+                <div v-if="props.error" class="q-mt-md">
+                    <q-btn
+                        :label="props.errorTexts.buttons[0]"
+                        no-caps
+                        rounded
+                        class="styled q-mx-sm"
+                        @click="emits('errorClicked', i)" />
+                    <q-btn
+                        v-for="i of props.errorTexts.buttons.slice(1)"
+                        :key="i"
+                        :label="i"
+                        no-caps
+                        rounded
+                        flat
+                        class="q-mx-sm"
+                        @click="emits('errorClicked', i)" />
+                </div>
             </div>
         </div>
     </flat-card>
@@ -23,17 +41,18 @@ const props = defineProps<{
     loadingTexts: {
         icon: string,
         title: string,
-        subtitle: string,
+        subtitle?: string,
     },
     successTexts: {
         icon: string,
         title: string,
-        subtitle: string,
+        subtitle?: string,
     },
     errorTexts: {
         icon: string,
         title: string,
-        subtitle: string,
+        subtitle?: string,
+        buttons: string[]
     },
     error: boolean,
     loading: boolean,
@@ -69,11 +88,21 @@ const emits = defineEmits(['errorClicked']);
     transition: background-color 1s ease-in-out;
 
     &[loading=false] {
-        background-color: #ecf8e9;
+        &[error=false] {
+            background-color: #ecf8e9;
 
-        .circle {
-            background-color: rgba(70, 226, 70, 0.2);
-            animation-play-state: paused;
+            .circle {
+                background-color: rgba(70, 226, 70, 0.3);
+                animation-play-state: paused;
+            }
+        }
+        &[error=true] {
+            background-color: #efdcd5;
+
+            .circle {
+                background-color: rgba(222, 74, 48, 0.3);
+                animation-play-state: paused;
+            }
         }
     }
 }

@@ -73,6 +73,14 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
 
     const nginxConfig = `
       server {
+
+        listen 443 ssl;
+
+        ssl_certificate     /etc/nginx/certificates/${config.domain}.crt;
+        ssl_certificate_key /etc/nginx/certificates/${config.domain}.key;
+        ssl_protocols       TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+        ssl_ciphers         HIGH:!aNULL:!MD5;
+        
         server_name ${ config.domain };
         location / {
             proxy_pass http://${ip}:${config.forward_port};
@@ -86,14 +94,6 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
             proxy_set_header X-Forwarded-Proto $scheme;
         }
 
-        listen 443 ssl;
-
-        ssl_certificate     /etc/nginx/certificates/${config.domain}.crt;
-        ssl_certificate_key /etc/nginx/certificates/${config.domain}.key;
-        ssl_protocols       TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
-        ssl_ciphers         HIGH:!aNULL:!MD5;
-      }
-      server {
         location /.well-known/acme-challenge {
           proxy_pass http://127.0.0.1:3000/api/.well-known/acme-challenge;
           proxy_http_version 1.1;
@@ -104,12 +104,43 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
           proxy_set_header X-Forwarded-Proto $scheme;
         }
 
+        location /.proxy/identify {
+            proxy_pass http://127.0.0.1:3000/api/identify;
+            proxy_http_version 1.1;
+    
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+      }
+      server {
+        server_name ${ config.domain };
+        listen 80;
+
+        location /.well-known/acme-challenge {
+          proxy_pass http://127.0.0.1:3000/api/.well-known/acme-challenge;
+          proxy_http_version 1.1;
+
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /.proxy/identify {
+            proxy_pass http://127.0.0.1:3000/api/identify;
+            proxy_http_version 1.1;
+    
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
         location / {
           return 301 https://$host$request_uri;
         }
-
-        server_name ${ config.domain };
-        listen 80;
       }
     `
 

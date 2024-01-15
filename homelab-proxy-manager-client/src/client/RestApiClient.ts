@@ -19,13 +19,14 @@ declare module 'axios' {
 
 class RestApiClient {
     private axios: AxiosInstance;
+    private baseURL: string;
     
     constructor () {
 
-        const baseURL = localStorage.getItem('apiOverride') ?? '/api';
+        this.baseURL = localStorage.getItem('apiOverride') ?? '/api';
 
         this.axios = axios.create({
-            baseURL,
+            baseURL: this.baseURL,
             timeout: 5000
         });
 
@@ -107,6 +108,10 @@ class RestApiClient {
 
     async checkSetup(): Promise<AxiosResponse<boolean>> {
         return this.axios.get('/setup', { meta: { noAuth: true } } as InternalAxiosRequestConfig);
+    }
+
+    async validateDomainConnection(domain: string): Promise<{ success: boolean, message: string }> {
+        return (await this.axios.post(`/identify/${domain}`, undefined, { timeout: 60000 })).data;
     }
 }
 
