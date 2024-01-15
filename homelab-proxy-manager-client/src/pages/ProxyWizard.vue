@@ -7,6 +7,9 @@
       <transition name="slideUp">
         <part-two-slide v-if="part === 2" @next="part = 3" :domain="domain" />
       </transition>
+      <transition name="slideUp">
+        <part-three-slide v-if="part === 3" @next="part = 4" />
+      </transition>
     </div>
   </q-page>
 </template>
@@ -15,6 +18,7 @@
 import { ref } from 'vue';
 import PartOneSlide from '../components/Wizard/PartOneSlide.vue';
 import PartTwoSlide from '../components/Wizard/PartTwoSlide.vue';
+import PartThreeSlide from '../components/Wizard/PartThreeSlide.vue';
 
 const part = ref(1);
 
