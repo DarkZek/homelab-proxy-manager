@@ -1,15 +1,22 @@
 <template>
-    <q-select :loading="loading" filled placeholder="Docker Container" :model-value="selectedHostLabel" @update:model-value="setSelectedHost" use-input hide-selected fill-input :options="dockerOptions">
+    <custom-select
+        :loading="loading"
+        label="Docker Container"
+        :model-value="selectedHostLabel"
+        @update:model-value="setSelectedHost"
+        @filter="filter = $event"
+        :options="dockerOptions">
         <template #append>
             <a class="docker-host">ID: {{ selectedHostLabel?.value ?? 'Loading ID' }}</a>
             <q-btn flat round dense icon="refresh" @click.prevent="loadDockerHosts" />
         </template>
-    </q-select>
+    </custom-select>
 </template>
 
 <script lang="ts" setup>
 import RestApiClient from 'src/client/RestApiClient';
 import { computed, ref } from 'vue';
+import CustomSelect from '../CustomSelect.vue';
 
 // The name of the docker host that is selected
 const selectedHost = defineModel<string | undefined>(undefined);
@@ -31,13 +38,15 @@ const selectedHostLabel = computed<{ label: string, value?: string} | undefined>
     };
 });
 
+const filter = ref('');
+
 // Sets the selected host based on the q-select's label
 function setSelectedHost(value: { label: string, value?: string} | undefined) {
     selectedHost.value = value?.label;
 }
 
 // Format the docker containers in a dropdown format
-const dockerOptions = computed(() => dockerContainers.value.map((row) => {
+const dockerOptions = computed(() => dockerContainers.value.filter((entry) => entry.name.includes(filter.value)).map((row) => {
   return {
     label: row.name,
     value: row.id,

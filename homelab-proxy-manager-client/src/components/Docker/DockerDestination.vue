@@ -12,7 +12,7 @@ import RestApiClient from '../../client/RestApiClient';
 import DockerContainerPicker from './DockerContainerPicker.vue';
 import DockerPortPicker from './DockerPortPicker.vue';
 
-const dockerHost = defineModel<string | unknown>('host');
+const dockerHost = defineModel<string | undefined>('host');
 
 const portBind = defineModel<string | undefined>('port');
 

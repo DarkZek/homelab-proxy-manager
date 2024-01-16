@@ -29,6 +29,12 @@
                 </div>
             </div>
         </div>
+        <div class="row q-pa-md">
+            <docker-destination
+                v-if="destinationType === ProxyDestinationType.DOCKER"
+                v-model:host="dockerDestination.host"
+                v-model:port="dockerDestination.port" />
+        </div>
     </flat-card>
 </template>
 
@@ -36,9 +42,12 @@
 import { ProxyDestinationType } from '@backend/types/ProxyDestinationType';
 import FlatCard from '../FlatCard.vue';
 import { defineEmits, defineModel } from 'vue';
+import DockerDestination from '../Docker/DockerDestination.vue';
 
 const destinationType = defineModel<ProxyDestinationType>();
 destinationType.value = ProxyDestinationType.DOCKER;
+
+const dockerDestination = defineModel<{ host: string | undefined, port: string | undefined }>('dockerDestination');
 
 const emits = defineEmits(['next']);
 
@@ -56,7 +65,7 @@ function next() {
 
 .destination {
     border: #eeeeee 1px solid;
-    border-radius: 15px;
+    border-radius: 25px;
     aspect-ratio: 1;
     display: flex;
     align-items: center;
