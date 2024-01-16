@@ -29,7 +29,7 @@ export class ProxyService {
   public async updateOneById(id: number, data: object) {
     const proxy = await this.getRequestedProxyOrFail(id);
 
-    return await this.proxyRepository.updateUser(proxy, data);
+    return await this.proxyRepository.updateProxy(proxy, data);
   }
 
   public async deleteOneById(id: number) {

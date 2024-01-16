@@ -12,7 +12,7 @@ export class ProxyRepository extends RepositoryBase<Proxy> {
     return await this.save(entity);
   }
 
-  public async updateUser(proxy: Proxy, data: object) {
+  public async updateProxy(proxy: Proxy, data: object) {
     Object.assign(proxy, data);
 
     return await proxy.save(data);

@@ -38,6 +38,19 @@
           :destinationType="destinationType"
           :destination="destination" />
       </transition>
+      <transition name="slideUp">
+        <part-five-slide
+          v-if="part === 5"
+          @next="part = 6"
+          :domain="domain" />
+      </transition>
+      <transition name="slideUp">
+        <part-six-slide
+          v-if="part === 6"
+          @next="part = 7"
+          :domain="domain"
+          :supports-https="true" />
+      </transition>
     </div>
   </q-page>
 </template>
@@ -48,6 +61,8 @@ import PartOneSlide from '../components/Wizard/PartOneSlide.vue';
 import PartTwoSlide from '../components/Wizard/PartTwoSlide.vue';
 import PartThreeSlide from '../components/Wizard/PartThreeSlide.vue';
 import PartFourSlide from '../components/Wizard/PartFourSlide.vue';
+import PartFiveSlide from '../components/Wizard/PartFiveSlide.vue';
+import PartSixSlide from '../components/Wizard/PartSixSlide.vue';
 import { ProxyDestinationType } from '@backend/types/ProxyDestinationType';
 
 const part = ref(1);

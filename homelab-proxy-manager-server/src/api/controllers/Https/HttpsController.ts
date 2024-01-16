@@ -28,12 +28,4 @@ export class HttpsController extends ControllerBase {
 
     return 'Success'
   }
-
-  @Post('/https/:domain/gen_cert')
-  public async newCertificate(@Param('domain') domain: string) {
-
-    await this.httpsService.requestHttpsCertificate(domain);
-
-    return 'Success'
-  }
 }

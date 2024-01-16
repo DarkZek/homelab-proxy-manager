@@ -104,8 +104,6 @@ export class IdentifyController extends ControllerBase {
       return { success: false, message };
     }
 
-    console.log(response)
-
     return { success: true };
   }
 }

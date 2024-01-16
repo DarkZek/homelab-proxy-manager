@@ -100,7 +100,7 @@ class RestApiClient {
     }
 
     async generateCertificate(domain: string): Promise<AxiosResponse<any>> {
-        return this.axios.post(`/https/${domain}/gen_cert`, undefined, { timeout: 60000 });
+        return this.axios.post(`/certificates/generate/${domain}`, undefined, { timeout: 60000 });
     }
 
     async setupHttps(request: HttpsSetupRequest) {
