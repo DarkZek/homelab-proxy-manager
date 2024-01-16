@@ -33,9 +33,18 @@
             <div class="row q-pa-md">
                 <docker-destination
                     v-if="destinationType === ProxyDestinationType.DOCKER"
-                    v-model:host="dockerDestination.host"
-                    v-model:port="dockerDestination.port"
-                    v-model:portIsHttps="dockerDestination.portIsHttps" />
+                    v-model:host="destination.host"
+                    v-model:port="destination.port"
+                    v-model:portIsHttps="destination.portIsHttps" />
+                <local-destination
+                    v-if="destinationType === ProxyDestinationType.LOCAL"
+                    v-model:port="destination.port"
+                    v-model:portIsHttps="destination.portIsHttps" />
+                <other-destination
+                    v-if="destinationType === ProxyDestinationType.PUBLIC"
+                    v-model:address="destination.host"
+                    v-model:port="destination.port"
+                    v-model:portIsHttps="destination.portIsHttps" />
             </div>
             <div class="row q-pr-md q-pb-md">
                 <q-space />
@@ -48,17 +57,24 @@
 <script lang="ts" setup>
 import { ProxyDestinationType } from '@backend/types/ProxyDestinationType';
 import FlatCard from '../FlatCard.vue';
-import { defineEmits, defineModel } from 'vue';
-import DockerDestination from '../Docker/DockerDestination.vue';
+import { defineEmits, defineModel, watch } from 'vue';
+import DockerDestination from '../Destinations/Docker/DockerDestination.vue';
+import OtherDestination from '../Destinations/Other/OtherDestination.vue';
+import LocalDestination from '../Destinations/Local/LocalDestination.vue';
 
 const destinationType = defineModel<ProxyDestinationType>();
 destinationType.value = ProxyDestinationType.DOCKER;
 
-const dockerDestination = defineModel<{
+watch(destinationType, () => {
+    destination.value!.host = undefined;
+    destination.value!.port = undefined;
+});
+
+const destination = defineModel<{
     host: string | undefined,
     port: string | undefined,
     portIsHttps: boolean | undefined
-}>('dockerDestination');
+}>('destination');
 
 const emits = defineEmits(['next']);
 

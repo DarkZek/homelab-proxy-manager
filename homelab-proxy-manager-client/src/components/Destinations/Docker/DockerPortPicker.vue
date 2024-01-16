@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import RestApiClient from 'src/client/RestApiClient';
 import { ref, watch, computed } from 'vue';
-import CustomSelect from '../CustomSelect.vue';
+import CustomSelect from '../../CustomSelect.vue';
 
 const loading = ref(false);
 

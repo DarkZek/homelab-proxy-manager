@@ -18,7 +18,7 @@
 <script lang="ts" setup>
 import RestApiClient from 'src/client/RestApiClient';
 import { computed, ref } from 'vue';
-import CustomSelect from '../CustomSelect.vue';
+import CustomSelect from '../../CustomSelect.vue';
 
 // The name of the docker host that is selected
 const selectedHost = defineModel<string | undefined>(undefined);

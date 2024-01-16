@@ -1,13 +1,15 @@
 <template>
-    <label class="label">{{ props.label }}</label>
-    <q-input
-        class="styled"
-        outlined
-        rounded
-        v-model="model"
-        :placeholder="props.placeholder"
-        lazy-rules
-        :rules="props.rules"/>
+    <div>
+        <label class="label">{{ props.label }}</label>
+        <q-input
+            class="styled"
+            outlined
+            rounded
+            v-model="model"
+            :placeholder="props.placeholder"
+            lazy-rules
+            :rules="props.rules"/>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -16,9 +18,9 @@ import { defineProps, defineModel } from 'vue';
 const model = defineModel<string | number>();
 
 const props = defineProps<{
-    label: string,
-    placeholder: string,
-    rules: ((val: any) => boolean | string)[]
+    label?: string,
+    placeholder?: string,
+    rules?: ((val: any) => boolean | string)[]
 }>()
 
 </script>

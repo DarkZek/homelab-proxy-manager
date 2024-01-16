@@ -7,6 +7,7 @@ import { UserCreateRequest } from '@backend/types/requests/Users/UserCreateReque
 import { GetAllProxiesResponse } from '@backend/types/responses/Proxy/GetAllProxiesResponse';
 import { HttpsSetupRequest } from '@backend/types/requests/Https/HttpsSetupRequest';
 import { ProxyUpdateRequest } from '@backend/types/requests/Proxy/ProxyUpdateRequest';
+import { ValidateDomainRequest } from '@backend/types/requests/Identify/ValidateDomainRequest';
 import { Proxy } from '@backend/models/Proxy/Proxy';
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
@@ -111,7 +112,11 @@ class RestApiClient {
     }
 
     async validateDomainConnection(domain: string): Promise<{ success: boolean, message: string }> {
-        return (await this.axios.post(`/identify/${domain}`, undefined, { timeout: 60000 })).data;
+        return (await this.axios.post(`/identify/domain/${domain}`, undefined, { timeout: 60000 })).data;
+    }
+
+    async validateDestinationConnection(request: ValidateDomainRequest): Promise<AxiosResponse<{ success: boolean, message: string }>> {
+        return (await this.axios.post(`/identify/destination/`, request, { timeout: 60000 }));
     }
 }
 

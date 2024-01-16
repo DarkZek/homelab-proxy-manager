@@ -7,6 +7,7 @@ use docker_ports::docker_ports;
 use docker_containers::docker_containers;
 use docker_ip::docker_ip;
 use reload_nginx::reload_nginx;
+use curl::curl;
 use notify::{Watcher, Event, RecursiveMode, Result, EventKind};
 
 mod local_ports;
@@ -14,6 +15,7 @@ mod docker_containers;
 mod docker_ports;
 mod docker_ip;
 mod reload_nginx;
+mod curl;
 
 fn main() -> Result<()> {
 
@@ -64,6 +66,14 @@ fn main() -> Result<()> {
                             return;
                         }
                         fs::write(format!("./commands/docker_ip.{}", container_name), docker_ip(&container_name)).unwrap();
+                    },
+                    "curl" => {
+                        let urlHex = command_args.next().unwrap();
+                        // Convert container_name from hex to ascii
+                        let decoded = hex::decode(urlHex).unwrap();
+                        let url = std::str::from_utf8(&decoded).unwrap();
+                        println!("Url is {}", url);
+                        fs::write(format!("./commands/curl.{}", urlHex), curl(&url)).unwrap();
                     },
                     "reload_nginx" => {
                         fs::write("./commands/reload_nginx", reload_nginx()).unwrap();

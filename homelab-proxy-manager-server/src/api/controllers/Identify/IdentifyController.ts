@@ -1,4 +1,4 @@
-import { Param, Get, JsonController, Post, UseBefore } from 'routing-controllers';
+import { Param, Get, JsonController, Post, UseBefore, Body } from 'routing-controllers';
 import { Service } from 'typedi';
 import { ControllerBase } from '@base/infrastructure/abstracts/ControllerBase';
 import { OpenAPI } from 'routing-controllers-openapi';
@@ -6,6 +6,9 @@ import { SetupService } from '../../services/Setup/SetupService';
 import axios from 'axios';
 import https from 'https';
 import { AuthCheck } from '@base/infrastructure/middlewares/Auth/AuthCheck';
+import { ValidateDomainRequest } from '@base/api/types/requests/Identify/ValidateDomainRequest';
+import { regulatorCommand } from '@base/api/regulator/command';
+import { ProxyDestinationType } from '@base/api/types/ProxyDestinationType';
 
 @Service()
 @OpenAPI({
@@ -22,7 +25,7 @@ export class IdentifyController extends ControllerBase {
     return { id: process.env.SERVER_IDENTIFIER }
   }
 
-  @Post('/:domain')
+  @Post('/domain/:domain')
   @UseBefore(AuthCheck)
   public async validateDomain(@Param('domain') domain: string) {
     // Ignore https errors as security is not a problem as we do not trust user input
@@ -34,7 +37,9 @@ export class IdentifyController extends ControllerBase {
 
     let response;
     try {
-      response = await instance.get(`http://${domain}/.proxy/identify`);
+      const url = `http://${domain}/.proxy/identify`;
+      console.log(`Connecting to ${url}`);
+      response = await instance.get(url);
     } catch (e) {
       let message = 'Unknown error.';
 
@@ -47,6 +52,8 @@ export class IdentifyController extends ControllerBase {
       } else if (e.code === 'ETIMEDOUT') {
         message = 'Connection timed out.';
       }
+
+      console.log(`Error encountered: ${message}`);
       
       return { success: false, message };
     }
@@ -56,6 +63,48 @@ export class IdentifyController extends ControllerBase {
     if (id !== process.env.SERVER_IDENTIFIER) {
       throw new Error('Identification check failed.');
     }
+
+    return { success: true };
+  }
+
+  @Post('/destination')
+  @UseBefore(AuthCheck)
+  public async validateDestination(@Body() request: ValidateDomainRequest) {
+    const instance = axios.create({
+      timeout: 55000,
+    });
+
+    let domain = request.host ?? '127.0.0.1';
+
+    if (request.destinationType === ProxyDestinationType.DOCKER) {
+      // Lookup IP
+      try {
+        domain = (await regulatorCommand('docker_ip.' + domain)).trim();
+      } catch (e) {
+        throw new Error('Could not find docker container.');
+      }
+    }
+
+    let response;
+    try {
+      const url = `${request.portIsHttps ? 'https' : 'http'}://${domain}:${request.port}/`;
+      console.log(`Connecting to ${url}`);
+      const hexEncodedUrl = Array.from(url).map(c => 
+        c.charCodeAt(0) < 128 ? c.charCodeAt(0).toString(16) : 
+        encodeURIComponent(c).replace(/\%/g,'').toLowerCase()
+      ).join('');
+
+      response = await regulatorCommand('curl.' + hexEncodedUrl);
+    } catch (e) {
+      let message = 'Unknown error.';
+      if (e.includes('Connection refused')) {
+        message = 'Connection refused.';
+      }
+      console.log(`Error encountered: ${message}`);
+      return { success: false, message };
+    }
+
+    console.log(response)
 
     return { success: true };
   }

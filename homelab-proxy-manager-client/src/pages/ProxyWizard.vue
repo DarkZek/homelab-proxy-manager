@@ -29,7 +29,14 @@
           v-if="part === 3"
           @next="part = 4"
           v-model="destinationType"
-          v-model:docker-destination="dockerDestination" />
+          v-model:destination="destination" />
+      </transition>
+      <transition name="slideUp">
+        <part-four-slide
+          v-if="part === 4"
+          @next="part = 5"
+          :destinationType="destinationType"
+          :destination="destination" />
       </transition>
     </div>
   </q-page>
@@ -40,6 +47,7 @@ import { ref } from 'vue';
 import PartOneSlide from '../components/Wizard/PartOneSlide.vue';
 import PartTwoSlide from '../components/Wizard/PartTwoSlide.vue';
 import PartThreeSlide from '../components/Wizard/PartThreeSlide.vue';
+import PartFourSlide from '../components/Wizard/PartFourSlide.vue';
 import { ProxyDestinationType } from '@backend/types/ProxyDestinationType';
 
 const part = ref(1);
@@ -48,7 +56,7 @@ const domain = ref('');
 
 const destinationType = ref(ProxyDestinationType.DOCKER);
 
-const dockerDestination = ref<{
+const destination = ref<{
   host: string | undefined,
   port: string | undefined,
   portIsHttps: boolean | undefined
