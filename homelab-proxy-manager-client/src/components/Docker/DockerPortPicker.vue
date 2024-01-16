@@ -1,23 +1,20 @@
 <template>
-    <q-select
+    <custom-select
         :loading="loading"
         options-dense
-        filled
-        placeholder="Container Port"
+        label="Container Port"
+        :rules="[val => val !== undefined || 'Please select a port']"
         :model-value="selectedPortBind"
         @update:model-value="setSelectedPort"
-        use-input
-        hide-selected
-        fill-input
         :options="dockerPortsOptions"
         :disable="dockerPortsOptions.length === 0"
-        @filter="containerPortFilterFn"
-        input-debounce="0" />
+        @filter="containerPortFilterFn" />
 </template>
 
 <script setup lang="ts">
 import RestApiClient from 'src/client/RestApiClient';
 import { ref, watch, computed } from 'vue';
+import CustomSelect from '../CustomSelect.vue';
 
 const loading = ref(false);
 
@@ -90,11 +87,10 @@ if (hostBind.host !== undefined) {
 }
 
 // Update the dropdown list with the custom port option while the user types in
-function containerPortFilterFn(value: string, done: () => void) {
+function containerPortFilterFn(value: string) {
   if (value !== '' && !Number.isNaN(parseInt(value.trim())) && parseInt(value.trim()) >= 0) {
     selectedPort.value = value.trim();
   }
-  done()
 }
 
 </script>

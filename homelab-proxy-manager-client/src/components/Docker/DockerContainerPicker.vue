@@ -5,6 +5,8 @@
         :model-value="selectedHostLabel"
         @update:model-value="setSelectedHost"
         @filter="filter = $event"
+        :rules="[val => val !== undefined || 'Please select a docker container']"
+        :required="true"
         :options="dockerOptions">
         <template #append>
             <a class="docker-host">ID: {{ selectedHostLabel?.value ?? 'Loading ID' }}</a>

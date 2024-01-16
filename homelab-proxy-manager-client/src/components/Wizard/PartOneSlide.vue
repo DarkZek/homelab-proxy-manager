@@ -9,7 +9,9 @@
             <q-form @submit.prevent="next" class="col">
                 <custom-input v-model="domain" label="Domain" placeholder="mail.example.com"
                     :rules="[
-                        (val: any) => /^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*$/.test(val) || val == '' || 'Invalid domain name'
+                        (val: any) => /^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*$/.test(val) || val == '' || 'Invalid domain name',
+                        (val: any) => val.length <= 63 || 'Domain name must be less than 63 characters',
+                        (val: any) => val.length >= 3 || 'Domain name must be at least 3 characters'
                     ]"/>
                 <q-btn class="styled full-width q-mt-sm" label="Continue" no-caps rounded type="submit" />
             </q-form>

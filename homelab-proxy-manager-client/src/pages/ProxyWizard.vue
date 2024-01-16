@@ -1,6 +1,17 @@
 <template>
   <q-page class="col">
     <div class="row" style="position: relative;">
+      <q-btn
+        class="q-mt-md q-mr-md back-button"
+        rounded
+        flat
+        outlined
+        color="grey-8"
+        label="Back"
+        no-caps
+        icon="o_arrow_back"
+        v-if="part > 1"
+        @click="part--" />
       <transition name="slideUp">
         <part-one-slide
           v-if="part === 1"
@@ -37,7 +48,11 @@ const domain = ref('');
 
 const destinationType = ref(ProxyDestinationType.DOCKER);
 
-const dockerDestination = ref<{ host: string | undefined, port: string | undefined }>({ host: undefined, port: undefined });
+const dockerDestination = ref<{
+  host: string | undefined,
+  port: string | undefined,
+  portIsHttps: boolean | undefined
+}>({ host: undefined, port: undefined, portIsHttps: false });
 
 </script>
 
@@ -46,6 +61,11 @@ const dockerDestination = ref<{ host: string | undefined, port: string | undefin
 .q-page {
   padding: 80px;
   max-width: 1000px;
+}
+
+.back-button {
+  position: absolute;
+  top: -60px;
 }
 
 </style>

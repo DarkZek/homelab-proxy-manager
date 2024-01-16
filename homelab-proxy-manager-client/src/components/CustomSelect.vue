@@ -7,12 +7,14 @@
         v-model="model"
         :placeholder="props.placeholder"
         use-input
+        :rules="props.rules"
         :loading="props.loading"
         :options="props.options"
         hide-selected
         popup-content-class="custom-select-popup"
         input-debounce="0"
         @filter="filterFn"
+        :options-dense="props.optionsDense"
         fill-input>
         <template #append>
             <slot name="append" />
@@ -30,6 +32,9 @@ const props = defineProps<{
     placeholder?: string,
     loading?: boolean,
     options?: { label: string, value: string }[],
+    optionsDense?: boolean,
+    disable?: boolean,
+    rules?: ((val: any) => boolean | string)[]
 }>()
 
 const emits = defineEmits(['filter']);
