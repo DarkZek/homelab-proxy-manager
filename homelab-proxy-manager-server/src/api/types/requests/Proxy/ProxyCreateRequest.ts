@@ -12,16 +12,16 @@ export class ProxyCreateRequest {
   @MinLength(2)
   @IsString()
   @IsNotEmpty()
-  forward_ip: string;
+  forwardIp: string;
 
   @MaxLength(20)
   @MinLength(2)
   @IsString()
   @IsNotEmpty()
-  forward_port: string;
+  forwardPort: string;
 
   @IsBoolean()
-  forward_https: boolean;
+  forwardHttps: boolean;
 
   @IsString()
   domain: string;
@@ -30,5 +30,5 @@ export class ProxyCreateRequest {
   status: number;
 
   @IsBoolean()
-  supports_https: boolean;
+  supportsHttps: boolean;
 }

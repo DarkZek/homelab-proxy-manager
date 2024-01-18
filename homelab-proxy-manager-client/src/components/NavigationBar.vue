@@ -1,38 +1,39 @@
 <template>
-  <div
-    class="navbar"
-  >
-
-    <div class="product">
-      <div class="logo" @click.prevent="router.push('/')" />
-      <span>HomeLab<br />Proxy<br />Manager</span>
-    </div>
-
-    <div class="navigation-items">
-      <div class="navigation-item" :active="route.name === 'Proxies'" @click="router.push('/')">
-        <q-icon name="o_language" />
-        <span>Proxies</span>
+  <div class="navbar-parent">
+    <div
+      class="navbar"
+    >
+      <div class="product">
+        <div class="logo" @click.prevent="router.push('/')" />
+        <span>HomeLab<br />Proxy<br />Manager</span>
       </div>
-      <div class="navigation-item" :active="route.name === 'Certificates'" @click="router.push('/certificates')">
-        <q-icon name="o_verified_user" />
-        <span>Certificates</span>
-      </div>
-    </div>
 
-    <q-space />
+      <div class="navigation-items">
+        <div class="navigation-item" :active="route.name === 'Proxies'" @click="router.push('/')">
+          <q-icon name="o_language" />
+          <span>Proxies</span>
+        </div>
+        <div class="navigation-item" :active="route.name === 'Certificates'" @click="router.push('/certificates')">
+          <q-icon name="o_verified_user" />
+          <span>Certificates</span>
+        </div>
+      </div>
 
-    <div class="navigation-items">
-      <div class="navigation-item" :active="route.name === 'Debugging'" @click="router.push('/debugging')">
-        <q-icon name="o_search" />
-        <span>Debugging</span>
-      </div>
-      <div class="navigation-item" :active="route.name === 'Settings'" @click="router.push('/settings')">
-        <q-icon name="o_settings" />
-        <span>Settings</span>
-      </div>
-      <div class="navigation-item" @click="signOut">
-        <q-icon name="o_logout" />
-        <span>Sign Out</span>
+      <q-space />
+
+      <div class="navigation-items">
+        <div class="navigation-item" :active="route.name === 'Debugging'" @click="router.push('/debugging')">
+          <q-icon name="o_search" />
+          <span>Debugging</span>
+        </div>
+        <div class="navigation-item" :active="route.name === 'Settings'" @click="router.push('/settings')">
+          <q-icon name="o_settings" />
+          <span>Settings</span>
+        </div>
+        <div class="navigation-item" @click="signOut">
+          <q-icon name="o_logout" />
+          <span>Sign Out</span>
+        </div>
       </div>
     </div>
   </div>
@@ -53,12 +54,17 @@ function signOut() {
 
 <style lang="scss" scoped>
 
+.navbar-parent {
+  min-width: 300px;
+}
+
 .navbar {
-  width: 400px;
+  width: 300px;
   padding-left: 15px;
   border-right: #CED0DC 2px solid;
   height: 100vh;
   display: flex;
+  position: fixed;
   flex-direction: column;
 }
 

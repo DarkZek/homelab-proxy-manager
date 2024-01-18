@@ -29,6 +29,10 @@ $inactive-text      : #818391;
 
 $shadow    : drop-shadow(1px 2px 4px rgba(0, 0, 0, 0.25));
 
+body {
+    color: $text;
+}
+
 .bg-text {
     color: $text;
 }

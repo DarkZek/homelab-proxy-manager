@@ -22,7 +22,7 @@
 
         <div class="relative full-width">
             <transition name="slideUp">
-                <part-two-error-slide v-if="error" :message="errorMessage" :domain="domain" />
+                <part-two-error-slide v-if="error" :message="errorMessage!" :domain="domain" />
             </transition>
         </div>
     </div>
@@ -55,8 +55,8 @@ async function verify() {
         const response = await RestApiClient.validateDomainConnection(props.domain);
         isValid = response.success;
         errorMessage.value = response.message;
-    } catch (e) {
-        console.error(e);
+    } catch (e: any) {
+        window.logError(e.response.data.message);
     }
 
     if (isValid) {

@@ -33,18 +33,18 @@
             <div class="row q-pa-md">
                 <docker-destination
                     v-if="destinationType === ProxyDestinationType.DOCKER"
-                    v-model:host="destination.host"
-                    v-model:port="destination.port"
-                    v-model:portIsHttps="destination.portIsHttps" />
+                    v-model:host="destination!.host"
+                    v-model:port="destination!.port"
+                    v-model:portIsHttps="destination!.portIsHttps" />
                 <local-destination
                     v-if="destinationType === ProxyDestinationType.LOCAL"
-                    v-model:port="destination.port"
-                    v-model:portIsHttps="destination.portIsHttps" />
+                    v-model:port="destination!.port"
+                    v-model:portIsHttps="destination!.portIsHttps" />
                 <other-destination
                     v-if="destinationType === ProxyDestinationType.PUBLIC"
-                    v-model:address="destination.host"
-                    v-model:port="destination.port"
-                    v-model:portIsHttps="destination.portIsHttps" />
+                    v-model:address="destination!.host"
+                    v-model:port="destination!.port"
+                    v-model:portIsHttps="destination!.portIsHttps" />
             </div>
             <div class="row q-pr-md q-pb-md">
                 <q-space />
@@ -63,12 +63,13 @@ import OtherDestination from '../Destinations/Other/OtherDestination.vue';
 import LocalDestination from '../Destinations/Local/LocalDestination.vue';
 
 const destinationType = defineModel<ProxyDestinationType>();
-destinationType.value = ProxyDestinationType.DOCKER;
 
 watch(destinationType, () => {
     destination.value!.host = undefined;
     destination.value!.port = undefined;
 });
+
+destinationType.value = ProxyDestinationType.DOCKER;
 
 const destination = defineModel<{
     host: string | undefined,

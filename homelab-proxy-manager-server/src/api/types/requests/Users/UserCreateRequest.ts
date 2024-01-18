@@ -5,13 +5,13 @@ export class UserCreateRequest {
   @MinLength(2)
   @IsString()
   @IsNotEmpty()
-  first_name: string;
+  firstName: string;
 
   @MaxLength(20)
   @MinLength(2)
   @IsString()
   @IsNotEmpty()
-  last_name: string;
+  lastName: string;
 
   @IsEmail()
   @IsString()

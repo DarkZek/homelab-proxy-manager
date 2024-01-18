@@ -4,7 +4,7 @@ import { ProxyDestinationType } from '../../ProxyDestinationType';
 export class ProxyUpdateRequest {
   @IsEnum(ProxyDestinationType)
   @IsOptional()
-  forward_type?: ProxyDestinationType;
+  forwardType?: ProxyDestinationType;
 
   @IsOptional()
   @IsString()
@@ -15,17 +15,17 @@ export class ProxyUpdateRequest {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  forward_ip?: string;
+  forwardIp?: string;
 
   @MaxLength(20)
   @MinLength(2)
   @IsString()
   @IsOptional()
-  forward_port?: string;
+  forwardPort?: string;
 
   @IsBoolean()
   @IsOptional()
-  forward_https?: boolean;
+  forwardHttps?: boolean;
 
   @IsString({ each: true })
   @IsArray()
@@ -40,5 +40,5 @@ export class ProxyUpdateRequest {
 
   @IsBoolean()
   @IsOptional()
-  supports_https?: boolean;
+  supportsHttps?: boolean;
 }

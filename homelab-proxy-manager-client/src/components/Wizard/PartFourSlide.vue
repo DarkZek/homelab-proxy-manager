@@ -70,7 +70,7 @@ async function verify() {
         isValid = response.data.success;
         errorMessage.value = response.data.message;
     } catch (e) {
-        console.error(e);
+        window.logError(e.response.data.message);
     }
 
     if (isValid) {

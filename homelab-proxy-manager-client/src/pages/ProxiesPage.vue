@@ -6,7 +6,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <proxy-view v-for="proxy of rows" :proxy="proxy" :key="proxy.id" @click.prevent="router.push(`/proxies/${proxy.id}`)" />
+        <proxy-view class="q-pa-sm" v-for="proxy of rows" :proxy="proxy" :key="proxy.id" @click.prevent="router.push(`/proxies/${proxy.id}`)" />
       </div>
     </div>
   </q-page>
@@ -37,8 +37,10 @@ RestApiClient.getAllProxies().then((proxies) => {
 }
 
 .proxy-view {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   cursor: pointer;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
   transition: filter 0.1s ease-in-out;
 
   &:hover {

@@ -1,8 +1,8 @@
 <template>
-    <flat-card class="q-pa-md proxy-view">
+    <flat-card class="proxy-view">
         <div class="row">
             <div class="logo q-mr-lg">
-                <q-avatar size="100px" font-size="40px" color="primary" text-color="white">
+                <q-avatar size="75px" font-size="40px" color="primary" text-color="white">
                     <q-img :src="`http://${props.proxy.domain}/favicon.ico`">
                         <template v-slot:error>
                             <div class="absolute-full flex flex-center bg-primary text-blue-6">
@@ -78,7 +78,7 @@ const props = defineProps<{ proxy: Proxy }>();
 }
 
 .details {
-    font-size: 22px;
+    font-size: 18px;
 }
 
 .domain {

@@ -5,13 +5,13 @@ export class UserUpdateRequest {
   @MinLength(2)
   @IsString()
   @IsOptional()
-  first_name: string;
+  firstName: string;
 
   @MaxLength(20)
   @MinLength(2)
   @IsString()
   @IsOptional()
-  last_name: string;
+  lastName: string;
 
   @IsEmail()
   @IsString()
