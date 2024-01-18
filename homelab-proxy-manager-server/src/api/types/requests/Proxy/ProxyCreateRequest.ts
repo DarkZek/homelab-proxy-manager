@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, MinLength, MaxLength, IsEnum, IsArray, ArrayMinSize, IsInt, IsBoolean } from 'class-validator';
-import { ProxyDestinationType } from '@api/types/ProxyDestinationType';
+import { ProxyDestinationType } from '../../ProxyDestinationType';
 
 export class ProxyCreateRequest {
   @IsEnum(ProxyDestinationType)

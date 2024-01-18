@@ -1,4 +1,4 @@
-import { HostSystemGetLocalPorts, ValidateDomainRequest, ProxyUpdateRequest,
+import { ValidateDomainRequest, ProxyUpdateRequest,
         HttpsSetupRequest, GetAllProxiesResponse, UserCreateRequest,
         RegisterRequest, LoginRequest, DockerGetPorts,
         DockerGetContainers, ProxyCreateRequest } from '@backend/types';
@@ -113,7 +113,7 @@ class RestApiClient {
         return (await this.axios.post(`/identify/destination/`, request, { timeout: 60000 }));
     }
 
-    async getLocalPorts(): Promise<AxiosResponse<HostSystemGetLocalPorts>> {
+    async getLocalPorts(): Promise<AxiosResponse<any>> {
         return this.axios.get('/hostsystem/local_ports');
     }
 }

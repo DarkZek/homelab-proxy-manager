@@ -1,8 +1,8 @@
-export { HostSystemGetLocalPorts } from './responses/HostSystem/HostSystemGetLocalPorts';
-export { GetAllProxiesResponse } from './responses/Proxy/GetAllProxiesResponse';
-export { DockerGetContainers } from './responses/Docker/DockerGetContainers';
-export { DockerGetPorts } from './responses/Docker/DockerGetPorts';
-export { BasicDataResponse } from './responses/BasicDataResponse';
+export type { HostSystemGetLocalPorts } from './responses/HostSystem/HostSystemGetLocalPorts';
+export type { GetAllProxiesResponse } from './responses/Proxy/GetAllProxiesResponse';
+export type { DockerGetContainers } from './responses/Docker/DockerGetContainers';
+export type { DockerGetPorts } from './responses/Docker/DockerGetPorts';
+export type { BasicDataResponse } from './responses/BasicDataResponse';
 export { ProxyDestinationType } from './ProxyDestinationType';
 export { ProxyStatus } from './ProxyStatus';
 export { LoginRequest } from './requests/Auth/LoginRequest';

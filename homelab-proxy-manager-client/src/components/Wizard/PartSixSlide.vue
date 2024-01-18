@@ -1,42 +1,18 @@
 <template>
-    <flat-card class="q-pa-lg">
+    <flat-card class="q-pa-lg full-width">
         <div class="row">
             <div class="col q-pr-md">
-                <a class="title">Your domain is live</a>
+                <a class="title">Ready to go live?</a>
                 <br>
-                <span class="content">Setup is complete and your domain is live.</span>
-            </div>
-            <div class="col q-pt-xs">
-                <div class="row">
-                    <q-img :src="`${props.supportsHttps ? 'https' : 'http'}://${props.domain}/favicon.ico`">
-                        <template v-slot:error>
-                            <div class="absolute-full flex flex-center bg-primary text-blue-6">
-                            ?
-                            </div>
-                            <q-tooltip anchor="top middle" self="bottom middle">
-                                Domain {{ props.domain }} provides no /favicon.ico file
-                            </q-tooltip>
-                        </template>
-                    </q-img>
-                    <div class="col">
-                        <span>??</span>
-                        <div class="row text-blue-6 overflow-hidden">
-                            <a
-                            :href="`${props.supportsHttps ? 'https' : 'http'}://${props.domain}/`"
-                            target="_blank">
-                            <q-icon name="o_open_in_new" />
-                            {{props.supportsHttps ? 'https' : 'http'}}://{{ props.domain }}/
-                        </a>
-                        </div>
-                    </div>
-                </div>
+                <span class="content">Setup is complete and {{ props.domain }} is ready to go live.</span>
                 <q-btn
                     class="styled full-width q-mt-sm"
-                    label="Go Home"
+                    label="Go Live"
                     no-caps
                     rounded
+                    :loading="loading"
                     type="submit"
-                    @click="router.push('/')" />
+                    @click="goLive" />
             </div>
         </div>
     </flat-card>
@@ -44,23 +20,50 @@
 
 <script lang="ts" setup>
 import FlatCard from '../FlatCard.vue';
-import { defineEmits, defineModel } from 'vue';
-import CustomInput from '../CustomInput.vue';
-import { useRouter } from 'vue-router';
+import { defineEmits, ref } from 'vue';
+import RestApiClient from 'src/client/RestApiClient';
+import { ProxyDestinationType, ProxyStatus } from '@backend/types';
 
-const props = defineProps<{ domain: string, supportsHttps: boolean }>();
+const props = defineProps<{
+    domain: string,
+    supportsHttps: boolean,
+    forwardHttps: boolean,
+    port: string,
+    destinationType: ProxyDestinationType,
+    host: string,
+}>();
+const emits = defineEmits(['next']);
 
-const router = useRouter();
+const loading = ref(false);
 
-</script>
+const created = ref(false);
 
-<style scoped lang="scss">
+async function goLive() {
+    loading.value = true;
 
-.q-img {
-    width: 60px;
-    border-radius: 40px;
-    filter: $shadow;
-    margin-right: 20px;
+    try {
+        if (!created.value) {
+            await RestApiClient.createProxy({
+                forward_type: props.destinationType,
+                name: '??',
+                forward_ip: props.host,
+                forward_port: props.port,
+                forward_https: props.forwardHttps,
+                domain: props.domain,
+                status: ProxyStatus.ACTIVE,
+                supports_https: props.supportsHttps
+            });
+        }
+
+        created.value = true;
+
+        await RestApiClient.updateProxies();
+
+        emits('next');
+    } finally {
+        loading.value = false;
+    }
 }
 
-</style>
+
+</script>

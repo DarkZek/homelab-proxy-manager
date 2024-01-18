@@ -71,7 +71,7 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
       ip = (await regulatorCommand('docker_ip.' + config.forward_ip)).trim();
     }
 
-    const nginxConfig = `
+    const httpsConfig = `
       server {
 
         listen 443 ssl;
@@ -83,10 +83,8 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
         
         server_name ${ config.domain };
         location / {
-            proxy_pass http://${ip}:${config.forward_port};
+            proxy_pass ${ config.forward_https ? 'https' : 'http' }://${ip}:${config.forward_port};
             proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
     
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
@@ -113,7 +111,9 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
         }
-      }
+      }`;
+      
+      const httpConfig = `
       server {
         server_name ${ config.domain };
         listen 80;
@@ -139,10 +139,18 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
         }
 
         location / {
-          return 301 https://$host$request_uri;
+          proxy_pass ${ config.forward_https ? 'https' : 'http' }://${ip}:${config.forward_port};
+          proxy_http_version 1.1;
+  
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
         }
       }
-    `
+    `;
+
+    const nginxConfig = config.forward_https ? httpsConfig + httpConfig : httpConfig;
 
     fs.writeFileSync(`${process.env.NGINX_PATH}sites-enabled/${config.id}.automatic.conf`, nginxConfig);
   }

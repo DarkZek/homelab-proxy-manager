@@ -10,8 +10,8 @@
         label="Back"
         no-caps
         icon="o_arrow_back"
-        v-if="part > 1"
-        @click="part--" />
+        v-if="part > 1 && part < 7"
+        @click="back" />
       <transition name="slideUp">
         <part-one-slide
           v-if="part === 1"
@@ -42,14 +42,25 @@
         <part-five-slide
           v-if="part === 5"
           @next="part = 6"
-          :domain="domain" />
+          :domain="domain"
+          v-model="supportsHttps" />
       </transition>
       <transition name="slideUp">
         <part-six-slide
           v-if="part === 6"
           @next="part = 7"
+          :destination-type="destinationType"
+          :port="destination.port"
+          :host="destination.host"
+          :forward-https="destination.portIsHttps"
+          :supports-https="supportsHttps"
+          :domain="domain" />
+      </transition>
+      <transition name="slideUp">
+        <part-seven-slide
+          v-if="part === 7"
           :domain="domain"
-          :supports-https="true" />
+          :supports-https="supportsHttps" />
       </transition>
     </div>
   </q-page>
@@ -63,7 +74,11 @@ import PartThreeSlide from '../components/Wizard/PartThreeSlide.vue';
 import PartFourSlide from '../components/Wizard/PartFourSlide.vue';
 import PartFiveSlide from '../components/Wizard/PartFiveSlide.vue';
 import PartSixSlide from '../components/Wizard/PartSixSlide.vue';
-import { ProxyDestinationType } from '@backend/types/ProxyDestinationType';
+import PartSevenSlide from '../components/Wizard/PartSevenSlide.vue';
+import { ProxyDestinationType } from '@backend/types';
+
+// These are loading pages that automatically progress so when we click back, we skip over them as well
+const skipBack = [2, 4];
 
 const part = ref(1);
 
@@ -71,11 +86,20 @@ const domain = ref('');
 
 const destinationType = ref(ProxyDestinationType.DOCKER);
 
+const supportsHttps = ref(false);
+
 const destination = ref<{
   host: string | undefined,
   port: string | undefined,
   portIsHttps: boolean | undefined
 }>({ host: undefined, port: undefined, portIsHttps: false });
+
+function back() {
+  part.value--;
+  if (skipBack.includes(part.value) && part.value !== 0) {
+    back();
+  }
+}
 
 </script>
 

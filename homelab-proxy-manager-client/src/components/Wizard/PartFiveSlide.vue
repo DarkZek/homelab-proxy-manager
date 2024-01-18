@@ -27,7 +27,7 @@
                     no-caps
                     rounded
                     type="submit"
-                    :disable="status === Status.Generating || status === Status.Error"
+                    :disable="status === Status.Generating"
                     v-if="status !== Status.Success"
                     @click="generate" />
                 <q-btn
@@ -60,6 +60,7 @@ import RestApiClient from 'src/client/RestApiClient';
 
 const props = defineProps<{ domain: string }>();
 const emits = defineEmits(['next']);
+const supportsHttps = defineModel<boolean>();
 
 enum Status {
     Waiting = 'Waiting',
@@ -77,6 +78,7 @@ async function generate() {
         await RestApiClient.generateCertificate(props.domain);
     
         status.value = Status.Success;
+        supportsHttps.value = true;
     } catch (e) {
         status.value = Status.Error;
     }

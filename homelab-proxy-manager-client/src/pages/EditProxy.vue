@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { ProxyDestinationType } from '@backend/types/ProxyDestinationType';
+import { ProxyDestinationType } from '@backend/types';
 import RestApiClient from '../client/RestApiClient';
 import { ProxyStatus } from '@backend/types/ProxyStatus';
 import DockerDestination from '../components/Docker/DockerDestination.vue';
