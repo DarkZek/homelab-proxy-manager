@@ -15,7 +15,7 @@ pub fn curl(url: &str) -> String {
 
 #[cfg(not(debug_assertions))]
 pub fn curl(url: &str) -> String {
-    let output = Command::new("curl").args(["-i", url])
+    let output = Command::new("curl").args(["-m", "10", "-i", url])
         .output()
         .expect("Failed to execute command");
 

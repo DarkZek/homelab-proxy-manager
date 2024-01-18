@@ -1,13 +1,7 @@
-import { ProxyCreateRequest } from '@backend/types/requests/Proxy/ProxyCreateRequest';
-import { DockerGetContainers } from '@backend/types/responses/Docker/DockerGetContainers';
-import { DockerGetPorts } from '@backend/types/responses/Docker/DockerGetPorts';
-import { LoginRequest } from '@backend/types/requests/Auth/LoginRequest';
-import { RegisterRequest } from '@backend/types/requests/Auth/RegisterRequest';
-import { UserCreateRequest } from '@backend/types/requests/Users/UserCreateRequest'
-import { GetAllProxiesResponse } from '@backend/types/responses/Proxy/GetAllProxiesResponse';
-import { HttpsSetupRequest } from '@backend/types/requests/Https/HttpsSetupRequest';
-import { ProxyUpdateRequest } from '@backend/types/requests/Proxy/ProxyUpdateRequest';
-import { ValidateDomainRequest } from '@backend/types/requests/Identify/ValidateDomainRequest';
+import { HostSystemGetLocalPorts, ValidateDomainRequest, ProxyUpdateRequest,
+        HttpsSetupRequest, GetAllProxiesResponse, UserCreateRequest,
+        RegisterRequest, LoginRequest, DockerGetPorts,
+        DockerGetContainers, ProxyCreateRequest } from '@backend/types';
 import { Proxy } from '@backend/models/Proxy/Proxy';
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
@@ -117,6 +111,10 @@ class RestApiClient {
 
     async validateDestinationConnection(request: ValidateDomainRequest): Promise<AxiosResponse<{ success: boolean, message: string }>> {
         return (await this.axios.post(`/identify/destination/`, request, { timeout: 60000 }));
+    }
+
+    async getLocalPorts(): Promise<AxiosResponse<HostSystemGetLocalPorts>> {
+        return this.axios.get('/hostsystem/local_ports');
     }
 }
 

@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const REGULATOR_MAX_ATTEMPTS = 25;
+const REGULATOR_MAX_ATTEMPTS = 100;
 
 export async function regulatorCommand(name: string): Promise<string> {
     // Remove old command

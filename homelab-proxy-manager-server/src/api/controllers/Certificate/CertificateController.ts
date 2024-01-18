@@ -35,10 +35,10 @@ export class CertificateController extends ControllerBase {
 
     await this.httpsService.requestHttpsCertificate(domain);
 
-    // await this.certificateService.create({
-    //   domain,
-    //   expires: new Date()
-    // });
+    await this.certificateService.create({
+       domain,
+       expires: new Date()
+    });
 
     return 'Success'
   }
