@@ -1,77 +1,103 @@
 <template>
-    <q-page class="row items-center justify-evenly">
-      <q-card v-if="!registered">
-        <q-form @submit="register" class="q-pa-lg">
-          <a>Homelab Proxy Manager</a>
+  <q-page class="row items-center justify-evenly">
+    <flat-card>
+      <q-form @submit.prevent="register" class="q-pa-xl">
+        <div>
+          <span class="text-bold text-center full-width block text-h6" style="font-size: ">Setup Homelab Proxy Manager</span>
           <br>
-          <a>Setup</a>
-          <q-input outlined v-model="firstName" label="First Name"/>
-          <q-input outlined v-model="lastName" label="Last Name" />
-          <q-input outlined v-model="email" label="Email" type="email" />
-          <q-input outlined v-model="password" label="Password" type="password" />
+          <span class="text-center full-width block">Setup your instance of Homelab Proxy Manager with an account</span>
+          <br>
+          <custom-input
+            outlined
+            class="q-mb-sm"
+            v-model="firstName"
+            label="First Name"
+            required
+            placeholder="John"
+            autocomplete="given-name" />
+          <custom-input
+            outlined
+            class="q-mb-sm"
+            v-model="lastName"
+            label="Last Name"
+            required
+            placeholder="Doe"
+            autocomplete="family-name" />
+          <custom-input
+            outlined
+            class="q-mb-sm"
+            v-model="email"
+            label="Email"
+            type="email"
+            required
+            placeholder="example@gmail.com"
+            autocomplete="email" />
+          <custom-input
+            outlined
+            class="q-mb-sm"
+            v-model="password"
+            label="Password"
+            required
+            type="password"
+            placeholder="**********"
+            autocomplete="password" />
           <q-btn
-            class="q-mt-md"
-            color="primary"
-            label="Login"
+            class="q-mt-md full-width styled text-white"
+            rounded
+            no-caps
+            :loading="loading"
+            label="Create Account"
             type="submit"></q-btn>
-          </q-form>
-      </q-card>
-      <q-card v-else>
-        <q-form @submit="setupHttps" class="q-pa-lg">
-          <q-checkbox label="Accept Lets Encrypt TOS" v-model="httpsTos" required />
-          <q-input outlined v-model="httpsContactEmail" label="Contact Email" />
-          <q-btn type="submit" label="Setup HTTPS Info" />
+        </div>
         </q-form>
-      </q-card>
-    </q-page>
-  </template>
+    </flat-card>
+  </q-page>
+</template>
   
-  <script setup lang="ts">
-  import { ref } from 'vue';
-  import RestApiClient from '../client/RestApiClient';
-  import { useRouter } from 'vue-router';
-  
-  const router = useRouter();
-  
-  const email = ref('');
-  const password = ref('');
-  const firstName = ref('');
-  const lastName = ref('');
+<script setup lang="ts">
+import { ref } from 'vue';
+import RestApiClient from '../client/RestApiClient';
+import { useRouter } from 'vue-router';
+import CustomInput from 'src/components/CustomInput.vue';
+import FlatCard from 'src/components/FlatCard.vue';
 
-  const registered = ref(localStorage.getItem('token') !== null);
-  
-  async function register() {
-    try {
-      const response = await RestApiClient.register({
-        email: email.value,
-        password: password.value,
-        first_name: firstName.value,
-        last_name: lastName.value,
-      });
-  
-      localStorage.setItem('token', response.data.access_token);
-  
-      registered.value = true;
-    } catch (error: any) {
-      if (error.response.status === 401) {
-        alert('Invalid credentials');
-      } else {
-        alert('Something went wrong');
-      }
-    }
-  }
+const router = useRouter();
 
-  const httpsTos = ref(false);
-  const httpsContactEmail = ref('');
+const email = ref('');
+const password = ref('');
+const firstName = ref('');
+const lastName = ref('');
 
-  async function setupHttps() {
+const loading = ref(false);
 
-    await RestApiClient.setupHttps({
-      tos: httpsTos.value,
-      email: httpsContactEmail.value,
+async function register() {
+  loading.value = true;
+  try {
+    const response = await RestApiClient.register({
+      email: email.value,
+      password: password.value,
+      firstName: firstName.value,
+      lastName: lastName.value,
     });
 
+    localStorage.setItem('token', response.data.access_token);
+
+    router.push('/setup/letsencrypt');
+  } catch (error: any) {
+    if (error.response.status === 401) {
+      alert('Invalid credentials');
+    } else {
+      alert('Something went wrong');
+    }
+  } finally {
+    loading.value = false;
+  }
+}
+
+// Check if setup is required
+RestApiClient.checkSetup().then((val) => {
+  if (!val.data) {
     router.replace('/');
   }
-  </script>
-  
+})
+</script>

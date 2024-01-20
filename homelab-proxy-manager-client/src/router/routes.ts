@@ -18,7 +18,10 @@ const routes: RouteRecordRaw[] = [
     name: 'Setup',
     path: '/setup',
     component: () => import('layouts/PlainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/SetupPage.vue') }],
+    children: [
+      { path: '', component: () => import('pages/SetupPage.vue') },
+      { path: 'letsencrypt', component: () => import('pages/SetupLetsEncryptPage.vue') },
+    ],
   },
   {
     name: 'Debugging',

@@ -5,7 +5,7 @@
         <div>
           <span class="text-bold text-center full-width block text-h6" style="font-size: ">Login</span>
           <br>
-          <span class="text-center full-width block" style="font-size: ">Login to Homelab Proxy Manager</span>
+          <span class="text-center full-width block">Login to Homelab Proxy Manager</span>
           <custom-input
             outlined
             v-model="email"
