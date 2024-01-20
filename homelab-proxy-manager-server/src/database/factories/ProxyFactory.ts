@@ -5,9 +5,9 @@ import { ProxyDestinationType } from '@api/types/ProxyDestinationType';
 
 define(Proxy, (faker: typeof Faker) => {
   const proxy = new Proxy();
-  proxy.forward_type = ProxyDestinationType.DOCKER;
-  proxy.forward_port = faker.internet.port().toString();
-  proxy.forward_ip = faker.internet.ip();
+  proxy.destinationType = ProxyDestinationType.DOCKER;
+  proxy.forwardPort = faker.internet.port().toString();
+  proxy.forwardIp = faker.internet.ip();
   proxy.id = faker.random.number();
   proxy.domain = faker.internet.domainName();
 

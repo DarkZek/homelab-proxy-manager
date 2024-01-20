@@ -46,7 +46,7 @@
                     v-model:port="destination!.port"
                     v-model:portIsHttps="destination!.portIsHttps" />
             </div>
-            <div class="row q-pr-md q-pb-md">
+            <div class="row q-pr-md q-pb-md" v-if="props.standalone !== true">
                 <q-space />
                 <q-btn class="styled q-mt-sm q-px-xl" label="Continue" no-caps rounded type="submit" />
             </div>
@@ -61,6 +61,10 @@ import { defineEmits, defineModel, watch } from 'vue';
 import DockerDestination from '../Destinations/Docker/DockerDestination.vue';
 import OtherDestination from '../Destinations/Other/OtherDestination.vue';
 import LocalDestination from '../Destinations/Local/LocalDestination.vue';
+
+const props = defineProps<{
+    standalone?: boolean,
+}>();
 
 const destinationType = defineModel<ProxyDestinationType>();
 

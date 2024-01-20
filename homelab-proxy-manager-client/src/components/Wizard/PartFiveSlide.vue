@@ -42,6 +42,7 @@
                     class="full-width q-mt-sm"
                     label="Skip SSL"
                     color="grey-7"
+                    :disable="status === Status.Generating"
                     flat
                     v-if="status !== Status.Success"
                     dense

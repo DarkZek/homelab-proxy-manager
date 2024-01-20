@@ -9,7 +9,7 @@
         :required="true"
         :options="dockerOptions">
         <template #append>
-            <a class="docker-host">ID: {{ selectedHostLabel?.value ?? 'Loading ID' }}</a>
+            <a class="docker-host">{{ selectedHostLabel?.value }}</a>
             <q-btn flat round dense icon="refresh" @click.prevent="loadDockerHosts" />
         </template>
     </custom-select>

@@ -10,6 +10,7 @@
             :type="props.type"
             :placeholder="props.placeholder"
             lazy-rules
+            :disable="props.disable"
             :autocomplete="props.autocomplete"
             :rules="props.rules"/>
     </div>
@@ -26,6 +27,7 @@ const props = defineProps<{
     rules?: ((val: any) => boolean | string)[],
     autocomplete?: string,
     required?: boolean,
+    disable?: boolean,
     type?: "number" | "textarea" | "time" | "text" | "password" | "email" | "search" | "tel" | "file" | "url" | "date" | "datetime-local"
 }>()
 

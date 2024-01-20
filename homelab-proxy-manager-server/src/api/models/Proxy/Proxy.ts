@@ -12,22 +12,22 @@ export class Proxy extends EntityBase {
   name: string;
 
   @Column("varchar", { length: "50" })
-  forward_type: ProxyDestinationType;
+  destinationType: ProxyDestinationType;
 
   @Column("varchar", { length: "191" })
-  forward_ip: string;
+  forwardIp: string;
 
   @Column()
-  forward_port: string;
+  forwardPort: string;
 
   @Column("boolean", { default: false })
-  forward_https: boolean;
+  forwardHttps: boolean;
 
   @Column()
   domain: string;
 
   @Column("boolean", { default: true })
-  supports_https: boolean;
+  supportsHttps: boolean;
 
   @Column("integer")
   status: ProxyStatus;

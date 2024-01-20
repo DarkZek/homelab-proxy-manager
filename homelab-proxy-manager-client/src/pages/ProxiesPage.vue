@@ -39,8 +39,6 @@ RestApiClient.getAllProxies().then((proxies) => {
 .proxy-view {
   margin-bottom: 15px;
   cursor: pointer;
-  border-top-left-radius: 50px;
-  border-bottom-left-radius: 50px;
   transition: filter 0.1s ease-in-out;
 
   &:hover {

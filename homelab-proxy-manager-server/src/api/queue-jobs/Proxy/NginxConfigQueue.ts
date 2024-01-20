@@ -64,11 +64,11 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
   private async updateProxy(config: Proxy) {
     console.debug(`Updating proxy with id ${config.id}`);
 
-    let ip = config.forward_ip;
+    let ip = config.forwardIp;
 
-    if (config.forward_type === ProxyDestinationType.DOCKER) {
+    if (config.destinationType === ProxyDestinationType.DOCKER) {
       // Lookup IP
-      ip = (await regulatorCommand('docker_ip.' + config.forward_ip)).trim();
+      ip = (await regulatorCommand('docker_ip.' + config.forwardIp)).trim();
     }
 
     const httpsConfig = `
@@ -83,7 +83,7 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
         
         server_name ${ config.domain };
         location / {
-            proxy_pass ${ config.forward_https ? 'https' : 'http' }://${ip}:${config.forward_port};
+            proxy_pass ${ config.forwardHttps ? 'https' : 'http' }://${ip}:${config.forwardPort};
             proxy_http_version 1.1;
     
             proxy_set_header Host $host;
@@ -139,7 +139,7 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
         }
 
         location / {
-          proxy_pass ${ config.forward_https ? 'https' : 'http' }://${ip}:${config.forward_port};
+          proxy_pass ${ config.forwardHttps ? 'https' : 'http' }://${ip}:${config.forwardPort};
           proxy_http_version 1.1;
   
           proxy_set_header Host $host;
@@ -150,7 +150,7 @@ class NginxConfigQueue extends QueueJobBase<ProxyJob, void> {
       }
     `;
 
-    const nginxConfig = config.forward_https ? httpsConfig + httpConfig : httpConfig;
+    const nginxConfig = config.supportsHttps ? httpsConfig + httpConfig : httpConfig;
 
     fs.writeFileSync(`${process.env.NGINX_PATH}sites-enabled/${config.id}.automatic.conf`, nginxConfig);
   }

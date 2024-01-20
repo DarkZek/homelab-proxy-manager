@@ -54,14 +54,20 @@ function searchFn(val: string) {
 }
 
 const ports = computed(() => {
-    return portsData.value.filter((v) => {
-        return v.port.includes(search.value) || v.service.includes(search.value);
-    }).map((v) => {
-        return {
-            label: `[${v.service}] ${v.port}`,
-            value: v.port
-        }
-    });
+    return [
+        ...portsData.value.filter((v) => {
+            return v.port.includes(search.value) || v.service.includes(search.value);
+        }).map((v) => {
+            return {
+                label: `[${v.service}] ${v.port}`,
+                value: v.port
+            }
+        }), 
+        ...portsData.value.some((v) => v.port === search.value) ? [] : [{
+            label: `[Custom] ${search.value}`,
+            value: search.value
+        }]
+    ]
 });
 
 RestApiClient.getLocalPorts().then((v) => {

@@ -4,7 +4,7 @@ import { ProxyDestinationType } from '../../ProxyDestinationType';
 export class ProxyUpdateRequest {
   @IsEnum(ProxyDestinationType)
   @IsOptional()
-  forwardType?: ProxyDestinationType;
+  destinationType?: ProxyDestinationType;
 
   @IsOptional()
   @IsString()

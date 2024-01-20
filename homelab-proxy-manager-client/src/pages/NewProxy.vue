@@ -102,11 +102,11 @@ function create() {
   RestApiClient.createProxy({
     name: name.value,
     domain: domain.value,
-    forward_type: destinationType.value,
-    forward_ip: dockerHost.value!,
-    forward_port: dockerPort.value!,
-    forward_https: forwardHttps.value,
-    supports_https: supportsHttps.value,
+    destinationType: destinationType.value,
+    forwardIp: dockerHost.value!,
+    forwardPort: dockerPort.value!,
+    forwardHttps: forwardHttps.value,
+    supportsHttps: supportsHttps.value,
     status: ProxyStatus.ACTIVE,
   }).then((proxy) => {
     router.push(`/proxies/${proxy.data.id}`);

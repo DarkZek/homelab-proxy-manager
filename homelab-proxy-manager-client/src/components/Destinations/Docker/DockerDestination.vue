@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch, defineModel, defineProps } from 'vue';
+import { defineModel } from 'vue';
 import DockerContainerPicker from './DockerContainerPicker.vue';
 import DockerPortPicker from './DockerPortPicker.vue';
 import CustomCheckbox from '../../CustomCheckbox.vue';

@@ -44,14 +44,14 @@ async function goLive() {
     try {
         if (!created.value) {
             await RestApiClient.createProxy({
-                forward_type: props.destinationType,
+                destinationType: props.destinationType,
                 name: '??',
-                forward_ip: props.host,
-                forward_port: props.port,
-                forward_https: props.forwardHttps,
+                forwardIp: props.host,
+                forwardPort: props.port,
+                forwardHttps: props.forwardHttps,
                 domain: props.domain,
                 status: ProxyStatus.ACTIVE,
-                supports_https: props.supportsHttps
+                supportsHttps: props.supportsHttps
             });
         }
 
@@ -60,6 +60,8 @@ async function goLive() {
         await RestApiClient.updateProxies();
 
         emits('next');
+    } catch (e: any) {
+        window.logError(`Failed to create proxy: ${e.response?.data?.message ?? e.message}`)
     } finally {
         loading.value = false;
     }

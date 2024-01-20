@@ -100,8 +100,6 @@ export class HttpsService {
     const finalized = await this.client.finalizeOrder(order, csr);
     const cert = await this.client.getCertificate(finalized);
 
-    console.log(finalized.expires)
-
     fs.writeFileSync(`${process.env.NGINX_PATH}certificates/${domain}.key`, key.toString());
     fs.writeFileSync(`${process.env.NGINX_PATH}certificates/${domain}.crt`, cert.toString());
 

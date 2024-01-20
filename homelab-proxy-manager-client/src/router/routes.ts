@@ -21,6 +21,12 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/SetupPage.vue') }],
   },
   {
+    name: 'Debugging',
+    path: '/debugging',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/DebuggingPage.vue') }],
+  },
+  {
     path: '/proxies/new',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/ProxyWizard.vue') }],

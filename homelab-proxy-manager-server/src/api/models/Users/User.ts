@@ -9,10 +9,10 @@ export class User extends EntityBase {
   id: number;
 
   @Column()
-  first_name: string;
+  firstName: string;
 
   @Column()
-  last_name: string;
+  lastName: string;
 
   @Column()
   email: string;
@@ -23,7 +23,7 @@ export class User extends EntityBase {
 
   @Expose({ name: 'full_name' })
   get fullName() {
-    return this.first_name + ' ' + this.last_name;
+    return this.firstName + ' ' + this.lastName;
   }
 
   @BeforeInsert()

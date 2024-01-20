@@ -33,15 +33,15 @@
                     </div>
                 </div>
                 <div class="row">
-                    <q-icon :name="props.proxy.supports_https ? 'o_lock' : 'o_lock_open'" class="q-pt-xs q-pr-xs" />
+                    <q-icon :name="props.proxy.supportsHttps ? 'o_lock' : 'o_lock_open'" class="q-pt-xs q-pr-xs" />
                     <span class="domain">{{ props.proxy.domain }}</span>
                     <q-icon name="o_arrow_forward" size="16px" class="q-pt-sm" />
                     <q-space />
-                    <div class="destination" v-if="props.proxy.forward_type === ProxyDestinationType.DOCKER">
+                    <div class="destination" v-if="props.proxy.destinationType === ProxyDestinationType.DOCKER">
                         <q-icon name="fa-brands fa-docker" class="q-mr-sm" size="20px" />
-                        <span class="q-mr-md">{{ props.proxy.forward_ip }}</span>
+                        <span class="q-mr-md">{{ props.proxy.forwardIp }}</span>
                         <q-icon name="o_lan" size="20px" />
-                        {{ props.proxy.forward_port }}
+                        {{ props.proxy.forwardPort }}
                     </div>
                 </div>
             </div>

@@ -3,7 +3,7 @@ import { ProxyDestinationType } from '../../ProxyDestinationType';
 
 export class ProxyCreateRequest {
   @IsEnum(ProxyDestinationType)
-  forward_type: ProxyDestinationType;
+  destinationType: ProxyDestinationType;
 
   @IsString()
   name: string;
