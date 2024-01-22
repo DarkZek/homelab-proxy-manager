@@ -8,11 +8,6 @@ import { FeatureToggle } from '@base/api/types/FeatureToggle';
 @Service({ eager: true })
 export class HttpsService {
 
-  public enabled: FeatureToggle = FeatureToggle.Unset;
-  contactEmail: undefined | string = undefined;
-  accountPrivateKey: undefined | Buffer = undefined;
-  accountUrl: undefined | string = undefined;
-
   client: AcmeClient | undefined = undefined;
 
   challenges: { [key: string]: string } = {};
@@ -21,58 +16,51 @@ export class HttpsService {
     // Attempt to load contact email
 
     configRespository.get().then((config) => {
-
-      this.enabled = config.letsEncryptEnabled;
-      this.contactEmail = config.caContactEmail;
-      this.accountPrivateKey = Buffer.from(config.caAccountPrivateKey, 'hex');
-      this.accountUrl = config.caAccountUrl;
+      const accountPrivateKey = Buffer.from(config.caAccountPrivateKey, 'hex');
 
       if (config.letsEncryptEnabled === FeatureToggle.Enabled) {
-        this.setupClient();
+        this.setupClient(accountPrivateKey, config.caAccountUrl);
       }
     })
   }
 
   public async setup(contactEmail: string) {
-    this.contactEmail = contactEmail;
-    this.accountPrivateKey = await acme.crypto.createPrivateKey();
+    const accountPrivateKey = await acme.crypto.createPrivateKey();
 
-    await this.setupClient();
+    await this.setupClient(accountPrivateKey);
 
     await this.client.createAccount({
       termsOfServiceAgreed: true,
-      contact: [`mailto:${this.contactEmail}`]
+      contact: [`mailto:${contactEmail}`]
     });
 
-    this.accountUrl = this.client.getAccountUrl();
+    const caAccountUrl = this.client.getAccountUrl();
 
     await this.configRespository.applyUpdate({ 
-      caContactEmail: this.contactEmail,
-      caAccountPrivateKey: this.accountPrivateKey.toString('hex'),
-      caAccountUrl: this.accountUrl,
+      caContactEmail: contactEmail,
+      caAccountPrivateKey: accountPrivateKey.toString('hex'),
+      caAccountUrl,
       letsEncryptEnabled: FeatureToggle.Enabled
     })
-
-    this.enabled = FeatureToggle.Enabled;
   }
 
   public async disable() {
-    this.enabled = FeatureToggle.Disabled;
-
-    await this.configRespository.applyUpdate({ letsEncryptEnabled: this.enabled })
+    await this.configRespository.applyUpdate({ letsEncryptEnabled: FeatureToggle.Disabled })
   }
 
-  private async setupClient() {
+  private async setupClient(accountKey: Buffer, accountUrl?: string) {
     this.client = new AcmeClient({
         directoryUrl: acme.directory.letsencrypt.production,
-        accountKey: this.accountPrivateKey,
-        accountUrl: this.accountUrl
+        accountKey,
+        accountUrl
     });
   }
 
   public async getTosUrl(): Promise<string> {
 
-    if (this.enabled !== FeatureToggle.Enabled) {
+    const config = await this.configRespository.get();
+
+    if (config.letsEncryptEnabled !== FeatureToggle.Enabled) {
       throw new Error('Let\'s Encrypt is not enabled');
     }
 
@@ -81,7 +69,9 @@ export class HttpsService {
 
   public async requestHttpsCertificate(domain: string) {
 
-    if (this.enabled !== FeatureToggle.Enabled) {
+    const config = await this.configRespository.get();
+
+    if (config.letsEncryptEnabled !== FeatureToggle.Enabled) {
       throw new Error('Let\'s Encrypt is not enabled');
     }
 

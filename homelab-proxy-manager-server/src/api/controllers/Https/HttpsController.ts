@@ -6,6 +6,8 @@ import { OpenAPI } from 'routing-controllers-openapi';
 import { HttpsService } from '@api/services/Https/HttpsService';
 import { HttpsSetupRequest } from '@api/types/requests/Https/HttpsSetupRequest';
 import { FeatureToggle } from '@base/api/types/FeatureToggle';
+import { ConfigRepository } from '@base/api/repositories/Config/ConfigRepository';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
 @Service()
 @OpenAPI({
@@ -14,7 +16,9 @@ import { FeatureToggle } from '@base/api/types/FeatureToggle';
 @JsonController('')
 @UseBefore(AuthCheck)
 export class HttpsController extends ControllerBase {
-  public constructor(private httpsService: HttpsService) {
+  public constructor(
+    private httpsService: HttpsService,
+    @InjectRepository() private configRespository: ConfigRepository ) {
     super();
   }
 
@@ -29,7 +33,9 @@ export class HttpsController extends ControllerBase {
   @Get('/https/tos')
   public async tosUrl() {
 
-    if (this.httpsService.enabled !== FeatureToggle.Enabled) {
+    const config = await this.configRespository.get();
+
+    if (config.letsEncryptEnabled !== FeatureToggle.Enabled) {
       throw new Error('Https is not enabled');
     }
 
@@ -39,7 +45,9 @@ export class HttpsController extends ControllerBase {
   @Get('/https/validate')
   public async validateConnection() {
 
-    if (this.httpsService.enabled !== FeatureToggle.Enabled) {
+    const config = await this.configRespository.get();
+
+    if (config.letsEncryptEnabled !== FeatureToggle.Enabled) {
       return true;
     }
 

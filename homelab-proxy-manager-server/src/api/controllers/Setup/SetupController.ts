@@ -30,7 +30,7 @@ export class SetupController extends ControllerBase {
     const config = await this.configRespository.get();
     return {
       userCreation: !await this.setupService.isSetupRequired(),
-      httpsCreation: this.httpsService.enabled !== FeatureToggle.Unset,
+      httpsCreation: config.letsEncryptEnabled !== FeatureToggle.Unset,
       validation: config.validated,
     }
   }
