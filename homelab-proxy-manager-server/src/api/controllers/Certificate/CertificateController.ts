@@ -33,11 +33,11 @@ export class CertificateController extends ControllerBase {
   @Post('/generate/:domain')
   public async newCertificate(@Param('domain') domain: string) {
 
-    await this.httpsService.requestHttpsCertificate(domain);
+    const { expires } = await this.httpsService.requestHttpsCertificate(domain);
 
     await this.certificateService.create({
        domain,
-       expires: new Date()
+       expires
     });
 
     return 'Success'

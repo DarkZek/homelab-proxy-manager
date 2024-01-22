@@ -20,7 +20,6 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 export class SetupController extends ControllerBase {
   public constructor(
     private setupService: SetupService,
-    private httpsService: HttpsService,
     @InjectRepository() private configRespository: ConfigRepository) {
     super();
   }

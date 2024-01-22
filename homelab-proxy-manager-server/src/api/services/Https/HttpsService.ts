@@ -4,6 +4,7 @@ import { ConfigRepository } from '../../repositories/Config/ConfigRepository';
 import acme, { Client as AcmeClient } from 'acme-client';
 import fs from 'fs';
 import { FeatureToggle } from '@base/api/types/FeatureToggle';
+import { X509Certificate } from 'crypto';
 
 @Service({ eager: true })
 export class HttpsService {
@@ -67,7 +68,7 @@ export class HttpsService {
     return this.client.getAccountUrl();
   }
 
-  public async requestHttpsCertificate(domain: string) {
+  public async requestHttpsCertificate(domain: string): Promise<{ expires: Date }> {
 
     const config = await this.configRespository.get();
 
@@ -112,9 +113,11 @@ export class HttpsService {
     fs.writeFileSync(`${process.env.NGINX_PATH}certificates/${domain}.key`, key.toString());
     fs.writeFileSync(`${process.env.NGINX_PATH}certificates/${domain}.crt`, cert.toString());
 
+    const parsedCert = new X509Certificate(cert);
+
     console.log(`Successfully requested certificate for ${domain}`)
 
-    return 'Success'
+    return { expires: new Date(parsedCert.validTo) }
   }
 
   public async handleChallengeRequest(challenge_id: string): Promise<string> {

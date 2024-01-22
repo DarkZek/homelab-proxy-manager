@@ -1,9 +1,10 @@
 import { ValidateDomainRequest, ProxyUpdateRequest,
         HttpsSetupRequest, GetAllProxiesResponse, UserCreateRequest,
         RegisterRequest, LoginRequest, DockerGetPorts,
-        DockerGetContainers, ProxyCreateRequest, SetupResponse } from '@backend/types';
+        DockerGetContainers, ProxyCreateRequest, SetupResponse, BasicDataResponse } from '@backend/types';
 import { User } from '@backend/models/Users/User';
 import { Proxy } from '@backend/models/Proxy/Proxy';
+import { Certificate } from '@backend/models/Certificates/Certificate';
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 // Add meta tag
@@ -132,6 +133,12 @@ class RestApiClient {
 
     async setValidation(status: boolean): Promise<void> {
         return this.axios.put('/setup/validate', { status });
+    }
+
+    async getAllCertificates(): Promise<AxiosResponse<BasicDataResponse<Certificate>>> {
+        const response = await this.axios.get('/certificates');
+        response.data.rows.forEach((row: Certificate) => row.expires = new Date(row.expires));
+        return response;
     }
 }
 

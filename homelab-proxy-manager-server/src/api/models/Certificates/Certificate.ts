@@ -6,7 +6,7 @@ export class Certificate extends EntityBase {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   domain: string;
 
   @Column()

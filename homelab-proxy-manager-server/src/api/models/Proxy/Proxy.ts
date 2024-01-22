@@ -8,7 +8,7 @@ export class Proxy extends EntityBase {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @Column("varchar", { length: "50" })
@@ -23,7 +23,7 @@ export class Proxy extends EntityBase {
   @Column("boolean", { default: false })
   forwardHttps: boolean;
 
-  @Column()
+  @Column({ unique: true })
   domain: string;
 
   @Column("boolean", { default: true })
