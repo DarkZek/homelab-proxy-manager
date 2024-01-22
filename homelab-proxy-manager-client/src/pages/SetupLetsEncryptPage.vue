@@ -19,8 +19,8 @@
             autocomplete="email" />
         <custom-checkbox label="Accept Lets Encrypt TOS" v-model="httpsTos" required />
         <br>
-        <q-btn class="styled full-width" no-caps rounded type="submit" label="Enable Let's Encrypt" />
-        <q-btn flat class="full-width" no-caps rounded type="button" label="Skip" @click="router.replace('/')" />
+        <q-btn class="styled full-width" no-caps rounded type="submit" label="Enable Let's Encrypt" :loading="loading" />
+        <q-btn flat class="full-width" no-caps rounded type="button" label="Skip" @click="router.push('/setup/validation')" />
       </q-form>
     </flat-card>
   </q-page>
@@ -49,7 +49,7 @@ async function setupHttps() {
       email: httpsContactEmail.value,
     });
 
-    router.replace('/');
+    router.replace('/setup/validation');
   } finally {
     loading.value = false;
   }

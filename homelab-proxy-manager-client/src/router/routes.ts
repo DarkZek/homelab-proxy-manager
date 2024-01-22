@@ -21,6 +21,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', component: () => import('pages/SetupPage.vue') },
       { path: 'letsencrypt', component: () => import('pages/SetupLetsEncryptPage.vue') },
+      { path: 'validation', component: () => import('pages/SetupValidation.vue') },
     ],
   },
   {

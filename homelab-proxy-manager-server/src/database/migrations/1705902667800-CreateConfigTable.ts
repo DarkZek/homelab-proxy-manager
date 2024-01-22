@@ -1,10 +1,10 @@
 import {MigrationInterface, QueryRunner, Table} from "typeorm";
 
-export class CreateCertificatesTable1705394919695 implements MigrationInterface {
+export class CreateConfigTable1705902667800 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const table = new Table({
-          name: 'certificates',
+          name: 'config',
           columns: [
             {
               name: 'id',
@@ -13,9 +13,11 @@ export class CreateCertificatesTable1705394919695 implements MigrationInterface 
               isGenerated: true,
               generationStrategy: 'increment',
             },
-            { name: 'domain', type: 'varchar', length: '191' },
-            { name: 'expires', type: 'TEXT' },
-            { name: 'autorenew', type: 'INTEGER' },
+            { name: 'validated', type: 'INTEGER' },
+            { name: 'letsEncryptEnabled', type: 'INTEGER' },
+            { name: 'caAccountUrl', type: 'TEXT' },
+            { name: 'caAccountPrivateKey', type: 'TEXT' },
+            { name: 'caContactEmail', type: 'TEXT' },
           ],
         });
     
@@ -23,7 +25,7 @@ export class CreateCertificatesTable1705394919695 implements MigrationInterface 
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable('certificates');
+        await queryRunner.dropTable('config');
     }
 
 }

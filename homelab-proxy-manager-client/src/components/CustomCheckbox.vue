@@ -1,5 +1,5 @@
 <template>
-    <q-checkbox class="custom-checkbox" v-model="model" :label="props.label" />
+    <q-checkbox class="custom-checkbox" v-model="model" :label="props.label" :color="props.color" :disable="props.disable" />
 </template>
 
 <script lang="ts" setup>
@@ -8,7 +8,9 @@ import { defineModel } from 'vue';
 const model = defineModel();
 
 const props = defineProps<{
-    label?: string
+    label?: string,
+    color?: string,
+    disable?: boolean,
 }>();
 
 </script>

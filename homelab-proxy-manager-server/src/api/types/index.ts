@@ -3,6 +3,7 @@ export type { GetAllProxiesResponse } from './responses/Proxy/GetAllProxiesRespo
 export type { DockerGetContainers } from './responses/Docker/DockerGetContainers';
 export type { DockerGetPorts } from './responses/Docker/DockerGetPorts';
 export type { BasicDataResponse } from './responses/BasicDataResponse';
+export type { SetupResponse } from './responses/Setup/SetupResponse';
 export { ProxyDestinationType } from './ProxyDestinationType';
 export { ProxyStatus } from './ProxyStatus';
 export { LoginRequest } from './requests/Auth/LoginRequest';

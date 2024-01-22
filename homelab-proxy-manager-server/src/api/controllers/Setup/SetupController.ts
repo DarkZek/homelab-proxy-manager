@@ -6,10 +6,11 @@ import { UserUpdateRequest } from '@api/types/requests/Users/UserUpdateRequest';
 import { AuthCheck } from '@base/infrastructure/middlewares/Auth/AuthCheck';
 import { ControllerBase } from '@base/infrastructure/abstracts/ControllerBase';
 import { OpenAPI } from 'routing-controllers-openapi';
-import { RequestQueryParser } from 'typeorm-simple-query-parser';
-import { LoggedUser } from '@base/decorators/LoggedUser';
-import { LoggedUserInterface } from '@api/interfaces/users/LoggedUserInterface';
 import { SetupService } from '../../services/Setup/SetupService';
+import { HttpsService } from '@base/api/services/Https/HttpsService';
+import { FeatureToggle } from '@base/api/types/FeatureToggle';
+import { ConfigRepository } from '@base/api/repositories/Config/ConfigRepository';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
 @Service()
 @OpenAPI({
@@ -17,12 +18,26 @@ import { SetupService } from '../../services/Setup/SetupService';
 })
 @JsonController('/setup')
 export class SetupController extends ControllerBase {
-  public constructor(private setupService: SetupService) {
+  public constructor(
+    private setupService: SetupService,
+    private httpsService: HttpsService,
+    @InjectRepository() private configRespository: ConfigRepository) {
     super();
   }
 
   @Get()
   public async check() {
-    return await this.setupService.isSetupRequired();
+    const config = await this.configRespository.get();
+    return {
+      userCreation: !await this.setupService.isSetupRequired(),
+      httpsCreation: this.httpsService.enabled !== FeatureToggle.Unset,
+      validation: config.validated,
+    }
+  }
+
+  @Put('/validate')
+  public async validate(@Body() request: { status: boolean }) {
+    await this.configRespository.applyUpdate({ validated: request.status })
+    return 'Success';
   }
 }

@@ -70,10 +70,6 @@ export class IdentifyController extends ControllerBase {
   @Post('/destination')
   @UseBefore(AuthCheck)
   public async validateDestination(@Body() request: ValidateDomainRequest) {
-    const instance = axios.create({
-      timeout: 55000,
-    });
-
     let domain = request.host ?? '127.0.0.1';
 
     if (request.destinationType === ProxyDestinationType.DOCKER) {
@@ -97,10 +93,10 @@ export class IdentifyController extends ControllerBase {
       response = await regulatorCommand('curl.' + hexEncodedUrl);
     } catch (e) {
       let message = 'Unknown error.';
-      if (e.includes('Connection refused')) {
+      if (e.message?.includes('Connection refused')) {
         message = 'Connection refused.';
       }
-      console.log(`Error encountered: ${message}`);
+      console.log(`Error encountered: ${message} ${e}`);
       return { success: false, message };
     }
 

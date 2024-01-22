@@ -11,4 +11,7 @@ export class Certificate extends EntityBase {
 
   @Column()
   expires: Date;
+
+  @Column("boolean", { default: true })
+  autorenew: boolean;
 }

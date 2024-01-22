@@ -58,6 +58,7 @@
               </div>
           </div>
       </flat-card>
+      <q-checkbox label="Supports HTTPS" v-model="supportsHttps"/>
     </q-form>
   </q-page>
 </template>

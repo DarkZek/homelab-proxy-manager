@@ -60,6 +60,12 @@ async function login() {
 
     localStorage.setItem('token', response.data.access_token);
 
+    const { data: setup } = await RestApiClient.checkSetup();
+    if (!setup.userCreation || !setup.httpsCreation || !setup.validation) {
+      router.replace('/setup');
+      return;
+    }
+
     router.replace('/');
   } catch (error: any) {
     if (error.response.status === 401) {
@@ -74,7 +80,7 @@ async function login() {
 
 // Check if setup is required
 RestApiClient.checkSetup().then((val) => {
-  if (val.data) {
+  if (!val.data.userCreation) {
     router.replace('/setup');
   }
 })

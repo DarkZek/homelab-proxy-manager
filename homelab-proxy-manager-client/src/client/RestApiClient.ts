@@ -1,7 +1,8 @@
 import { ValidateDomainRequest, ProxyUpdateRequest,
         HttpsSetupRequest, GetAllProxiesResponse, UserCreateRequest,
         RegisterRequest, LoginRequest, DockerGetPorts,
-        DockerGetContainers, ProxyCreateRequest } from '@backend/types';
+        DockerGetContainers, ProxyCreateRequest, SetupResponse } from '@backend/types';
+import { User } from '@backend/models/Users/User';
 import { Proxy } from '@backend/models/Proxy/Proxy';
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
@@ -101,7 +102,7 @@ class RestApiClient {
         return this.axios.post('/https/setup', request);
     }
 
-    async checkSetup(): Promise<AxiosResponse<boolean>> {
+    async checkSetup(): Promise<AxiosResponse<SetupResponse>> {
         return this.axios.get('/setup', { meta: { noAuth: true } } as InternalAxiosRequestConfig);
     }
 
@@ -115,6 +116,22 @@ class RestApiClient {
 
     async getLocalPorts(): Promise<AxiosResponse<any>> {
         return this.axios.get('/hostsystem/local_ports');
+    }
+
+    async getAllUsers(): Promise<User[]> {
+        return this.axios.get('/users');
+    }
+
+    async getHttpsTosUrl(): Promise<string> {
+        return this.axios.get('/https/tos');
+    }
+
+    async getHttpsValidation(): Promise<boolean> {
+        return this.axios.get('/https/validate');
+    }
+
+    async setValidation(status: boolean): Promise<void> {
+        return this.axios.put('/setup/validate', { status });
     }
 }
 

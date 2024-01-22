@@ -6,4 +6,3 @@ src/schema.gql
 .vscode
 .idea
 database.sqlite3
-https_config.json

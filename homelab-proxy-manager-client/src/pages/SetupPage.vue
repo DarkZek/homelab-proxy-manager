@@ -93,11 +93,4 @@ async function register() {
     loading.value = false;
   }
 }
-
-// Check if setup is required
-RestApiClient.checkSetup().then((val) => {
-  if (!val.data) {
-    router.replace('/');
-  }
-})
 </script>
