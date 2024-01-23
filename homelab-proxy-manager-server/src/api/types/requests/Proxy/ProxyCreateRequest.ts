@@ -12,7 +12,7 @@ export class ProxyCreateRequest {
   @MinLength(2)
   @IsString()
   @IsNotEmpty()
-  forwardIp: string;
+  forwardIp?: string;
 
   @MaxLength(20)
   @MinLength(2)

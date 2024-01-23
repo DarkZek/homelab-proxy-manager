@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner, Table} from "typeorm";
+import {MigrationInterface, QueryRunner, Table, TableUnique} from "typeorm";
 
 export class CreateProxyTable1704272560986 implements MigrationInterface {
 
@@ -23,6 +23,8 @@ export class CreateProxyTable1704272560986 implements MigrationInterface {
             { name: 'supportsHttps', type: 'BOOLEAN' }
           ],
         });
+
+        table.addUniqueConstraint(new TableUnique({ columnNames: ['domain'] }));
     
         await queryRunner.createTable(table);
     }

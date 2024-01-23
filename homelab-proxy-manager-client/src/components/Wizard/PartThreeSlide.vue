@@ -68,12 +68,14 @@ const props = defineProps<{
 
 const destinationType = defineModel<ProxyDestinationType>();
 
-watch(destinationType, () => {
+watch(destinationType, (newVal, oldVal) => {
+    if (oldVal === undefined) {
+        return;
+    }
+
     destination.value!.host = undefined;
     destination.value!.port = undefined;
 });
-
-destinationType.value = ProxyDestinationType.DOCKER;
 
 const destination = defineModel<{
     host: string | undefined,

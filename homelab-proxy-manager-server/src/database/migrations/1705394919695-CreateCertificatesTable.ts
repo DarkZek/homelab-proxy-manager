@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner, Table} from "typeorm";
+import {MigrationInterface, QueryRunner, Table, TableUnique} from "typeorm";
 
 export class CreateCertificatesTable1705394919695 implements MigrationInterface {
 
@@ -18,6 +18,8 @@ export class CreateCertificatesTable1705394919695 implements MigrationInterface 
             { name: 'autorenew', type: 'INTEGER' },
           ],
         });
+        
+        table.addUniqueConstraint(new TableUnique({ columnNames: ['domain'] }));
     
         await queryRunner.createTable(table);
     }

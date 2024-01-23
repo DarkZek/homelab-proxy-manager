@@ -67,7 +67,7 @@ class RestApiClient {
         return this.axios.get('/proxy');
     }
 
-    async getProxy(id: number): Promise<AxiosResponse<Proxy>> {
+    async getProxy(id: string): Promise<AxiosResponse<Proxy>> {
         return this.axios.get(`/proxy/${id}`);
     }
 

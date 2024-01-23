@@ -58,6 +58,7 @@ import FlatCard from '../FlatCard.vue';
 import { defineEmits, ref } from 'vue';
 import CustomInput from '../CustomInput.vue';
 import RestApiClient from 'src/client/RestApiClient';
+import { domainComparer } from '@backend/../utils/domainComparer';
 
 const props = defineProps<{ domain: string }>();
 const emits = defineEmits(['next']);
@@ -88,6 +89,17 @@ async function generate() {
 function next() {
     emits('next');
 }
+
+// Try see if we already have certificate
+RestApiClient.getAllCertificates().then((certificates) => {
+    const certificate = certificates.data.rows.find((c) => domainComparer(c.domain, props.domain));
+
+    if (certificate) {
+        // No need to generate one
+        supportsHttps.value = true;
+        next();
+    }
+});
 
 </script>
 

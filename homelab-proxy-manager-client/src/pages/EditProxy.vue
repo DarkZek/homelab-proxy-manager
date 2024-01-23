@@ -49,22 +49,36 @@
       <flat-card class="q-mt-md q-pa-lg">
           <div class="row">
               <div class="col">
+                  <a class="title">HTTPS Support</a>
+                  <br>
+                  <span class="content">This will allow you to access your proxy on more devices, and provide a secure connection to your destination.</span>
+              </div>
+              <div class="col" v-if="!hasCertificate">
+                <q-btn label="Generate Certificate" rounded no-caps @click="generateCertificate" :loading="certificateLoading" class="styled full-width"/>
+              </div>
+              <div class="col" v-else>
+                <custom-checkbox label="Supports HTTPS" v-model="supportsHttps" />
+              </div>
+          </div>
+      </flat-card>
+      <flat-card class="q-mt-md q-pa-lg">
+          <div class="row">
+              <div class="col">
                   <a class="title">Delete Proxy</a>
                   <br>
                   <span class="content">The proxy will be deleted immediately</span>
               </div>
               <div class="col">
-                <q-btn label="Delete" color="negative" rounded @click="deleteProxy" class="full-width"/>
+                <q-btn label="Delete" color="negative" rounded no-caps @click="deleteProxy" class="full-width"/>
               </div>
           </div>
       </flat-card>
-      <q-checkbox label="Supports HTTPS" v-model="supportsHttps"/>
     </q-form>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { ProxyDestinationType } from '@backend/types';
 import RestApiClient from '../client/RestApiClient';
@@ -72,6 +86,8 @@ import { ProxyStatus } from '@backend/types/ProxyStatus';
 import FlatCard from '../components/FlatCard.vue';
 import CustomInput from 'src/components/CustomInput.vue';
 import PartThreeSlide from 'src/components/Wizard/PartThreeSlide.vue';
+import { domainComparer } from '@backend/../utils/domainComparer';
+import CustomCheckbox from 'src/components/CustomCheckbox.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -81,7 +97,7 @@ const loading = ref(false);
 const name = ref('');
 const domain = ref<string>('');
 
-const destinationType = ref(ProxyDestinationType.DOCKER);
+const destinationType = ref(undefined);
 
 const destination = ref<{
   host: string | undefined,
@@ -111,10 +127,10 @@ async function update() {
       return;
     }
 
-    await RestApiClient.updateProxy(route.params.id, {
+    await RestApiClient.updateProxy(route.params.id as string, {
       domain: domain.value,
       destinationType: destinationType.value,
-      forwardIp: destination.value.host!,
+      forwardIp: destination.value.host ?? '127.0.0.1',
       forwardPort: destination.value.port!,
       forwardHttps: destination.value.portIsHttps,
       supportsHttps: supportsHttps.value,
@@ -132,7 +148,7 @@ async function update() {
 }
 
 // Load info
-RestApiClient.getProxy(route.params.id).then((proxy) => {
+RestApiClient.getProxy(route.params.id as string).then((proxy) => {
   domain.value = proxy.data.domain;
   destinationType.value = proxy.data.destinationType;
   destination.value.host = proxy.data.forwardIp;
@@ -142,9 +158,36 @@ RestApiClient.getProxy(route.params.id).then((proxy) => {
 });
 
 function deleteProxy() {
-  RestApiClient.deleteProxy(route.params.id).then(() => {
+  if (!window.confirm('Are you sure you want to delete this proxy?')) {
+    return;
+  }
+  RestApiClient.deleteProxy(route.params.id as string).then(() => {
     router.push('/');
   });
+}
+
+const hasCertificate = ref(false);
+const certificateLoading = ref(false);
+
+// Try see if we already have certificate
+RestApiClient.getAllCertificates().then((certificates) => {
+    const certificate = certificates.data.rows.find((c) => domainComparer(c.domain, domain.value));
+
+    if (certificate) {
+      hasCertificate.value = true;
+    }
+});
+
+async function generateCertificate() {
+  certificateLoading.value = true;
+  try {
+    await RestApiClient.generateCertificate(domain.value)
+    hasCertificate.value = true;
+  } catch (e: any) {
+    window.logError(`Failed to generate certificate: ${e.response?.data?.message ?? e.message}`);
+  } finally {
+    certificateLoading.value = false
+  }
 }
 
 </script>

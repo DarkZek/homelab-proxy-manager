@@ -59,6 +59,7 @@ function signOut() {
 }
 
 .navbar {
+  top: 0px;
   width: 300px;
   padding-left: 15px;
   border-right: #CED0DC 2px solid;

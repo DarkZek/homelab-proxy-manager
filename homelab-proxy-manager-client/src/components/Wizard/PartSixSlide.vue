@@ -46,7 +46,7 @@ async function goLive() {
             await RestApiClient.createProxy({
                 destinationType: props.destinationType,
                 name: '??',
-                forwardIp: props.host,
+                forwardIp: props.host ?? '127.0.0.1',
                 forwardPort: props.port,
                 forwardHttps: props.forwardHttps,
                 domain: props.domain,
